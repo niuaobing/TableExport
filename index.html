@@ -1,0 +1,3011 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>个人基本情况登记表-离线填报</title>
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="dist/css/tableexport.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="layui/css/layui.css">
+
+		<script type="text/javascript">
+			var m = 9; //分
+			var s = 59; //秒
+
+
+			function checksfzh() {
+				if ($("#sfzh").val() != '') {
+					if (!f_check_IDno(document.getElementById("sfzh"))) {
+						//$("#sfzh").focus();
+					} else {
+						var sfzh = $("#sfzh").val();
+						var y = sfzh.substr(6, 4);
+						var m = sfzh.substr(10, 2);
+						var d = sfzh.substr(12, 2);
+						$("#csny").val(y + '-' + m);
+					}
+				}
+			}
+
+			function f_getcsny() {
+				if ($("#sfzh").val() != '' && $("#csny").val() == '') {
+					if (!f_check_IDno(document.getElementById("sfzh"))) {
+						//$("#sfzh").focus();
+					} else {
+						var sfzh = $("#sfzh").val();
+						var y = sfzh.substr(6, 4);
+						var m = sfzh.substr(10, 2);
+						var d = sfzh.substr(12, 2);
+						$("#csny").val(y + '-' + m);
+					}
+				}
+			}
+
+			function f_dr() { //导入
+				var iwidth = 500;
+				var iheight = 200;
+				var top = (window.screen.availHeight - 30 - iheight) / 2;
+				var left = (window.screen.availWidth - 30 - iwidth) / 2;
+				f_chooseUsers('grjbxx_excel', 'grjbxx_excel', '/d/lz?m=loadexcel&xmid=<%=xmid %>&type=grjbxx', 'windowOpenContent',
+					'fulliframe', 500, 200, 'autoOpen', '上传excel', 'clear');
+			}
+
+			function upzp(flag) {
+				url = '<%=ROOT_PATH%>/d/lz?m=upzp';
+				var iwidth = 500;
+				var iheight = 200;
+				var top = (window.screen.availHeight - 30 - iheight) / 2;
+				var left = (window.screen.availWidth - 30 - iwidth) / 2;
+
+				f_chooseUsers('grjbxx_zp', 'grjbxx_zp', '/d/lz?m=upzp', 'windowOpenContent', 'fulliframe', 500, 200, 'autoOpen',
+					'图片更新', 'clear');
+
+				/*
+		var retValue = tools_open_dialog('<%=ROOT_PATH%>/window.jsp' ,null, url, 'dialogWidth:'+ iwidth +'px;dialogHeight:'+ iheight +'px;dialogLeft:'+ left +'px;dialogTop:'+ top +'px;resizable:0;');
+		if(retValue.length>=2){
+			var retst = retValue.substr(0,2);
+			var zppath = retValue.substr(2);
+			if(retst=='ok'){
+				if(flag==1){
+					$("#zpimg2").attr("src","");
+					$("#scimg").hide();
+					$("#zpimg2").css("width","100");
+					$("#zpimg2").css("height","120");
+					$("#zpimg2").attr("src","<%=PATH%>/lz/zp/"+zppath);
+					$("#scimg").after($("#zpimg2"));
+					AutoResizeImage(100,120,document.getElementById("zpimg2"));
+					$("#zp").val(zppath);
+				}else{
+					window.location.reload();
+				}
+			}
+		}
+		*/
+			}
+
+			function f_upzpSuccess(retValue) {
+				if (retValue.length >= 2) {
+					var retst = retValue.substr(0, 2);
+					var zppath = retValue.substr(2);
+					if (retst == 'ok') {
+						//if(flag==1){
+						$("#zpimg2").attr("src", "");
+						$("#scimg").hide();
+						$("#zpimg").hide();
+						$("#zpimg2").show();
+						var randomNum1 = Math.random();
+						$("#zpimg2").attr("src", "<%=PATH%>/lz/zp/" + zppath + "?v=" + randomNum1);
+						$("#scimg").after($("#zpimg2"));
+						$("#zp").val(zppath);
+						AutoResizeImage(100, 120, document.getElementById("zpimg2"));
+						//}else{
+						//	window.location.reload();
+						//}
+					}
+				}
+			}
+
+			function f_upExcelSuccess(retValue) {
+				if (retValue == 'error') {
+					layer.alert("上传失败,您可以稍后再试或联系系统管理员!", function() {});
+				} else if (retValue == 'bblx') {
+					layer.alert("上传的表格不匹配!", function() {});
+				} else if (retValue == 'size') {
+					layer.alert("文件太大，上传失败!", function() {});
+				} else {
+					var info = eval('(' + retValue + ')');
+					if (info.c_xb != '') {
+						$("#xb").val(info.c_xb);
+					}
+					if (info.c_sfzh != '') {
+						$("#sfzh").val(info.c_sfzh);
+					}
+					if (info.c_cym != '') {
+						$("#cym").val(info.c_cym);
+					}
+					if (info.c_mz != '') {
+						$("#mz").val(info.c_mz);
+					}
+					if (info.c_csny != '') {
+						$("#csny").val(info.c_csny);
+					}
+					if (info.c_jg != '') {
+						$("#jg").val(info.c_jg);
+					}
+					if (info.c_hyzk != '') {
+						$("#hyzk").val(info.c_hyzk);
+					}
+					if (info.c_whcd != '') {
+						$("#whcd").val(info.c_whcd);
+					}
+					if (info.c_zzmm != '') {
+						$("#zzmm").val(info.c_zzmm);
+					}
+					if (info.c_rdsj != '') {
+						$("#rdsj").val(info.c_rdsj);
+					}
+					if (info.c_cjgzsj != '') {
+						$("#cjgzsj").val(info.c_cjgzsj);
+					}
+					if (info.c_dwxz != '') {
+						$("#dwxz").val(info.c_dwxz);
+					}
+
+					if (info.c_zw != '') {
+						//$("#zw").val(info.c_zw); 
+						$("#zw_id").val(info.c_zw);
+						var zw_id = $("#zw_id").val();
+						var val = zw_id.split(',');
+						var boxes = document.getElementsByName("zw_name");
+						var zwmc = '';
+						for (i = 0; i < boxes.length; i++) {
+							for (j = 0; j < val.length; j++) {
+								if (boxes[i].value == val[j]) {
+									boxes[i].checked = true;
+									zwmc = boxes[i].nextSibling.nodeValue;
+									$("#zw").val(zwmc);
+									break;
+								}
+							}
+						}
+					}
+
+					if (info.c_jb != '') {
+						$("#jb").val(info.c_jb);
+					}
+					if (info.c_zc != '') {
+						$("#zc").val(info.c_zc);
+					}
+					if (info.c_fggz != '') {
+						$("#fggz").val(info.c_fggz);
+					}
+					if (info.c_rxzsj != '') {
+						$("#rxzsj").val(info.c_rxzsj);
+					}
+					if (info.c_jtzz != '') {
+						$("#zz").val(info.c_jtzz);
+					}
+					if (info.c_yb != '') {
+						$("#yb").val(info.c_yb);
+					}
+					if (info.gddh != '') {
+						$("#gddh").val(info.c_gddh);
+					}
+					if (info.c_sj != '') {
+						$("#sj").val(info.c_sj);
+					}
+					if (info.c_zyrzqk != '') {
+						$("#zyrzqk").val(info.c_zyrzqk);
+					}
+					if (info.c_ybrgx1 != '') {
+						$("#ybrgx1").val(info.c_ybrgx1);
+					}
+					if (info.c_xm1 != '') {
+						$("#xm1").val(info.c_xm1);
+					}
+					if (info.c_csny1 != '') {
+						$("#csny1").val(info.c_csny1);
+					}
+					if (info.c_zzmm1 != '') {
+						$("#zzmm1").val(info.c_zzmm1);
+					}
+					if (info.c_gzdwjzw1 != '') {
+						$("#gzdwjzw1").val(info.c_gzdwjzw1);
+					}
+
+					if (info.c_ybrgx2 != '') {
+						$("#ybrgx2").val(info.c_ybrgx2);
+					}
+					if (info.c_xm2 != '') {
+						$("#xm2").val(info.c_xm2);
+					}
+					if (info.c_csny2 != '') {
+						$("#csny2").val(info.c_csny2);
+					}
+					if (info.c_zzmm2 != '') {
+						$("#zzmm2").val(info.c_zzmm2);
+					}
+					if (info.c_gzdwjzw2 != '') {
+						$("#gzdwjzw2").val(info.c_gzdwjzw2);
+					}
+
+					if (info.c_ybrgx3 != '') {
+						$("#ybrgx3").val(info.c_ybrgx3);
+					}
+					if (info.c_xm3 != '') {
+						$("#xm3").val(info.c_xm3);
+					}
+					if (info.c_csny3 != '') {
+						$("#csny3").val(info.c_csny3);
+					}
+					if (info.c_zzmm3 != '') {
+						$("#zzmm3").val(info.c_zzmm3);
+					}
+					if (info.c_gzdwjzw3 != '') {
+						$("#gzdwjzw3").val(info.c_gzdwjzw3);
+					}
+
+					if (info.c_ybrgx4 != '') {
+						$("#ybrgx4").val(info.c_ybrgx4);
+					}
+					if (info.c_xm4 != '') {
+						$("#xm4").val(info.c_xm4);
+					}
+					if (info.c_csny4 != '') {
+						$("#csny4").val(info.c_csny4);
+					}
+					if (info.c_zzmm4 != '') {
+						$("#zzmm4").val(info.c_zzmm4);
+					}
+					if (info.c_gzdwjzw4 != '') {
+						$("#gzdwjzw4").val(info.c_gzdwjzw4);
+					}
+
+					if (info.c_ybrgx5 != '') {
+						$("#ybrgx5").val(info.c_ybrgx5);
+					}
+					if (info.c_xm5 != '') {
+						$("#xm5").val(info.c_xm5);
+					}
+					if (info.c_csny5 != '') {
+						$("#csny5").val(info.c_csny5);
+					}
+					if (info.c_zzmm5 != '') {
+						$("#zzmm5").val(info.c_zzmm5);
+					}
+					if (info.c_gzdwjzw5 != '') {
+						$("#gzdwjzw5").val(info.c_gzdwjzw5);
+					}
+
+					if (info.c_ybrgx6 != '') {
+						$("#ybrgx6").val(info.c_ybrgx6);
+					}
+					if (info.c_xm6 != '') {
+						$("#xm6").val(info.c_xm6);
+					}
+					if (info.c_csny6 != '') {
+						$("#csny6").val(info.c_csny6);
+					}
+					if (info.c_zzmm6 != '') {
+						$("#zzmm6").val(info.c_zzmm6);
+					}
+					if (info.c_gzdwjzw6 != '') {
+						$("#gzdwjzw6").val(info.c_gzdwjzw6);
+					}
+
+					if (info.c_ybrgx7 != '') {
+						$("#ybrgx7").val(info.c_ybrgx7);
+					}
+					if (info.c_xm7 != '') {
+						$("#xm7").val(info.c_xm7);
+					}
+					if (info.c_csny7 != '') {
+						$("#csny7").val(info.c_csny7);
+					}
+					if (info.c_zzmm7 != '') {
+						$("#zzmm7").val(info.c_zzmm7);
+					}
+					if (info.c_gzdwjzw7 != '') {
+						$("#gzdwjzw7").val(info.c_gzdwjzw7);
+					}
+
+					if (info.c_ybrgx8 != '') {
+						$("#ybrgx8").val(info.c_ybrgx8);
+					}
+					if (info.c_xm8 != '') {
+						$("#xm8").val(info.c_xm8);
+					}
+					if (info.c_csny8 != '') {
+						$("#csny8").val(info.c_csny8);
+					}
+					if (info.c_zzmm8 != '') {
+						$("#zzmm8").val(info.c_zzmm8);
+					}
+					if (info.c_gzdwjzw8 != '') {
+						$("#gzdwjzw8").val(info.c_gzdwjzw8);
+					}
+
+					if (info.c_jcqk != '') {
+						$("#jcqk").val(info.c_jcqk);
+					}
+					if (info.c_tp != '') {
+						f_upzpSuccess('ok' + info.c_tp);
+					}
+				}
+			}
+
+			function AutoResizeImage(maxWidth, maxHeight, objImg) {
+				try {
+					var img = new Image();
+					img.src = objImg.src;
+					var hRatio;
+					var wRatio;
+					var Ratio = 1;
+					var w = img.width;
+					var h = img.height;
+					wRatio = maxWidth / w;
+					hRatio = maxHeight / h;
+					if (maxWidth == 0 && maxHeight == 0) {
+						Ratio = 1;
+					} else if (maxWidth == 0) { //
+						if (hRatio < 1) Ratio = hRatio;
+					} else if (maxHeight == 0) {
+						if (wRatio < 1) Ratio = wRatio;
+					} else if (wRatio < 1 || hRatio < 1) {
+						Ratio = (wRatio <= hRatio ? wRatio : hRatio);
+					}
+					if (Ratio < 1) {
+						w = w * Ratio;
+						h = h * Ratio;
+					}
+					objImg.height = h;
+					objImg.width = w;
+				} catch (e) {
+
+				}
+			}
+		</script>
+
+		<style type="text/css">
+			body table tr td p strong {
+				font-size: 24px;
+			}
+
+			#td_right {
+				text-align: right;
+			}
+
+			.body_center {
+				text-align: center;
+				border-collapse: collapse;
+				margin: auto;
+			}
+
+			.td_border {
+				border-right: 1px solid block;
+				border-top: 1px solid block;
+				border-left: 1px solid block;
+				border-bottom: 1px solid block;
+				cellpadding: 0;
+				cellspacing: 0;
+			}
+
+			.ctable tr td {
+				height: 24px;
+				border: dotted 1px gray;
+			}
+
+			.inputs {
+				width: 100% !important;
+				border: 1px solid gray;
+				background-color: white;
+				text-align: left;
+				cursor: pointer;
+				font-size: 11.0pt;
+			}
+
+			.inputs1 {
+				border: 0;
+				background-color: #F1F8FD;
+				text-align: left;
+				cursor: pointer;
+				font-size: 11.0pt;
+				width: 100%;
+			}
+
+			.td_txt {
+				padding: 5px;
+				font-size: 11.0pt;
+				background-color: #E0EEEE;
+				font-family: "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Segoe UI", Tahoma, SimSun, sans-serif;
+			}
+
+			.td_txt1 {
+				padding: 5px;
+				font-size: 11.0pt;
+				background-color: #E0EEEE;
+				font-family: "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Segoe UI", Tahoma, SimSun, sans-serif;
+			}
+
+			.input_val {
+				font-size: 11.0pt;
+				color: black;
+				padding: 3px;
+				font-family: "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Segoe UI", Tahoma, SimSun, sans-serif;
+			}
+
+			.formwidth td {
+				font-size: 11.0pt;
+				font-family: "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Segoe UI", Tahoma, SimSun, sans-serif;
+			}
+
+			#grzwtable td {
+				border: 0px;
+			}
+
+			.tablestyle {
+				border: 1px solid black;
+			}
+
+			.tablestyle td {
+				border-top: 1px solid black;
+				border-bottom: 1px solid black;
+				border-left: 1px solid black;
+				border-right: 1px solid black;
+				padding: 3px;
+			}
+
+			.trth td {
+				background-color: #FBD4B4;
+				height: 25px;
+				font-weight: bold;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body scroll=auto onload="init()" class="shuiyin_bg" style="tab-interval:21pt; text-justify-trim:punctuation; text-align: center;background-color: #FFFFFF;padding-top: 20px;padding-bottom: 30px;">
+		<center>
+
+			<table width="877" border="0" class="body_center">
+				<tr>
+					<td height="36" colspan="10" align="center" style='font-size:18.0pt;color:black;font-weight: bold;padding-bottom: 10px;'>领导干部基本情况登记表</td>
+				</tr>
+				<tr>
+					<td colspan="10">
+						<table width="877" style="border: dotted 1px gray;border-collapse: collapse;border-top-style: none;" cellpadding="0"
+						 cellspacing="0" CLASS="ctable">
+							<tr>
+								<td style="height: 0px;border-style: none;" width="82"></td>
+								<td style="height: 0px;border-style: none;" width="100"></td>
+								<td style="height: 0px;border-style: none;" width="82"></td>
+								<td style="height: 0px;border-style: none;" width="37"></td>
+								<td style="height: 0px;border-style: none;" width="49"></td>
+								<td style="height: 0px;border-style: none;" colspan="2"></td>
+								<td style="height: 0px;border-style: none;" colspan="2"></td>
+								<td style="height: 0px;border-style: none;" width="116"></td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">处/科室</td>
+								<td colspan="9" align="center" style="overflow: auto;vertical-align: middle;">
+									<!-- <div style="width: 100%;height:200px;">
+									<div id="test4" class="demo-tree"></div>
+								  </div> -->
+									<input type="text" value="" id="bmid" name="bmid" style="display: none;">
+									<div class="layui-form-item">
+										<select id="quiz1" style="margin-top: 10px;width:500px;" onchange="f_select(1)">
+											<option deptflag="0" value="">请选择</option>
+											<option parentid="000000" deptflag="J" value="010000">河南省市场监督管理局</option>
+											<option parentid="000000" deptflag="J" value="020000">河南省药品监管局</option>
+											<option parentid="000000" deptflag="J" value="030000">省知识产权局(副厅级-省知识产权维权保护中心)</option>
+											<option parentid="000000" deptflag="J" value="040000">省盐业执法监督局(副厅级)</option>
+										</select>
+										<br>
+										<select id="quiz2" name="quiz2" style="margin-top: 10px;width:500px;display: none;" onchange="f_select(2)">
+											<option deptflag="0" value="">请选择</option>
+											<option parentid="010000" deptflag="B" value="010098">局领导</option>
+											<option parentid="010000" deptflag="B" value="010099">总工程师</option>
+											<option parentid="010000" deptflag="B" value="010100">办公室(应急管理办公室、督查室)</option>
+											<option parentid="010000" deptflag="B" value="010200">综合规划处(新闻宣传处)</option>
+											<option parentid="010000" deptflag="B" value="010300">法规处</option>
+											<option parentid="010000" deptflag="B" value="010400">执法稽查处(市场综合治理办公室)</option>
+											<option parentid="010000" deptflag="B" value="010500">登记注册处</option>
+											<option parentid="010000" deptflag="B" value="010600">信用监督管理处</option>
+											<option parentid="010000" deptflag="B" value="010700">反垄断处(打击侵犯知识产权和制售假冒伪劣商品领导小组办公室)</option>
+											<option parentid="010000" deptflag="B" value="010800">价格监督检查处</option>
+											<option parentid="010000" deptflag="B" value="010900">反不正当竞争处(规范直销与打击传销办公室)</option>
+											<option parentid="010000" deptflag="B" value="011000">网络交易监督管理处(网络安全和信息化办公室)</option>
+											<option parentid="010000" deptflag="B" value="011100">广告监督管理处</option>
+											<option parentid="010000" deptflag="B" value="011200">质量发展处</option>
+											<option parentid="010000" deptflag="B" value="011300">产品质量安全监督管理处</option>
+											<option parentid="010000" deptflag="B" value="011400">食品安全协调处</option>
+											<option parentid="010000" deptflag="B" value="011500">食品经营安全监督管理处(餐饮食品安全监督管理处)</option>
+											<option parentid="010000" deptflag="B" value="011600">食品生产安全监督管理处</option>
+											<option parentid="010000" deptflag="B" value="011700">食品安全抽检监测处</option>
+											<option parentid="010000" deptflag="B" value="011800">特种设备安全监察处</option>
+											<option parentid="010000" deptflag="B" value="011900">计量处</option>
+											<option parentid="010000" deptflag="B" value="012000">标准化处</option>
+											<option parentid="010000" deptflag="B" value="012100">认证监督管理处</option>
+											<option parentid="010000" deptflag="B" value="012200">检验检测监督管理处</option>
+											<option parentid="010000" deptflag="B" value="012300">知识产权促进处</option>
+											<option parentid="010000" deptflag="B" value="012400">知识产权保护处</option>
+											<option parentid="010000" deptflag="B" value="012500">非公经济促进处(小微企业个体市场党建处)</option>
+											<option parentid="010000" deptflag="B" value="012600">科技和财务处(审计处)</option>
+											<option parentid="010000" deptflag="B" value="012700">人事处(合作交流处)</option>
+											<option parentid="010000" deptflag="B" value="012800">机关党委(机关纪委)</option>
+											<option parentid="010000" deptflag="B" value="012900">离退休干部工作处</option>
+											<option parentid="010000" deptflag="B" value="012910">应急管理办公室</option>
+											<option parentid="010000" deptflag="B" value="012920">新闻宣传处</option>
+											<option parentid="010000" deptflag="B" value="012930">双打办</option>
+											<option parentid="010000" deptflag="B" value="012940">规范直销与打击传销办公室</option>
+											<option parentid="010000" deptflag="B" value="012950">餐饮食品安全监督管理处</option>
+											<option parentid="010000" deptflag="B" value="012960">小个专党建处</option>
+											<option parentid="010000" deptflag="B" value="012970">审计处</option>
+											<option parentid="010000" deptflag="B" value="012980">合作交流处</option>
+											<option parentid="010000" deptflag="B" value="012990">督查室</option>
+											<option parentid="010000" deptflag="B" value="012991">网信办</option>
+											<option parentid="010000" deptflag="B" value="012992">市场综合治理工作办公室</option>
+											<option parentid="010000" deptflag="B" value="012993">正处级领导</option>
+											<option parentid="010000" deptflag="Z" value="013000">直属分局</option>
+											<option parentid="010000" deptflag="Z" value="013100">12315指挥中心</option>
+											<option parentid="010000" deptflag="Z" value="013200">原河南省省工商行政管理经济检查总队</option>
+											<option parentid="010000" deptflag="Z" value="013300">原河南省省质量技术监督稽查总队</option>
+											<option parentid="010000" deptflag="Z" value="013600">河南省消费者协会</option>
+											<option parentid="020000" deptflag="B" value="024100">局领导</option>
+											<option parentid="010000" deptflag="Z" value="013700">河南省工商行政管理学校</option>
+											<option parentid="010000" deptflag="Z" value="013800">郑州商标审查协作中心</option>
+											<option parentid="020000" deptflag="B" value="020100">总工程师</option>
+											<option parentid="010000" deptflag="Z" value="013900">河南省工商行政管理局信息中心</option>
+											<option parentid="020000" deptflag="B" value="020200">综合处(应急管理办公室)</option>
+											<option parentid="020000" deptflag="B" value="020300">科技与规划财务处(交流合作处)</option>
+											<option parentid="010000" deptflag="Z" value="014000">河南省质量技术监督局信息中心</option>
+											<option parentid="010000" deptflag="Z" value="014100">河南省个体劳动者协会(河南省个体私营经济协会)</option>
+											<option parentid="020000" deptflag="B" value="020400">政策法规处</option>
+											<option parentid="010000" deptflag="Z" value="014200">河南省市场经济监督管理研究中心</option>
+											<option parentid="020000" deptflag="B" value="020500">药品注册管理处</option>
+											<option parentid="020000" deptflag="B" value="020600">药品生产监督管理处</option>
+											<option parentid="010000" deptflag="Z" value="014300">机关服务中心</option>
+											<option parentid="020000" deptflag="B" value="020700">药品流通监督管理处</option>
+											<option parentid="010000" deptflag="Z" value="014500">河南省纤维检验所(河南省纤维检验局)</option>
+											<option parentid="020000" deptflag="B" value="020800">医疗器械注册管理处</option>
+											<option parentid="020000" deptflag="B" value="020900">医疗器械监督管理处</option>
+											<option parentid="010000" deptflag="Z" value="014600">河南省计量科学研究院</option>
+											<option parentid="010000" deptflag="Z" value="014700">河南省标准化研究院</option>
+											<option parentid="020000" deptflag="B" value="021000">化妆品监督管理处</option>
+											<option parentid="010000" deptflag="Z" value="014800">河南省产品质量监督检验院(国家建筑装修材料质量监督检验中心)</option>
+											<option parentid="020000" deptflag="B" value="021100">行政许可处</option>
+											<option parentid="010000" deptflag="Z" value="014900">河南省锅炉压力容器安全监测研究院</option>
+											<option parentid="020000" deptflag="B" value="021200">执法监督处</option>
+											<option parentid="010000" deptflag="Z" value="015000">河南省特种设备安全监测研究院</option>
+											<option parentid="020000" deptflag="B" value="021300">人事处(离退休干部工作处)</option>
+											<option parentid="020000" deptflag="B" value="021400">机关党委(机关纪委)</option>
+											<option parentid="010000" deptflag="Z" value="015100">河南省纺织产品质量监督检验院</option>
+											<option parentid="020000" deptflag="Z" value="021500">省食品药品检验所</option>
+											<option parentid="010000" deptflag="Z" value="015200">河南省产品质量安全应急服务中心</option>
+											<option parentid="020000" deptflag="Z" value="021600">省医疗器械检验所</option>
+											<option parentid="010000" deptflag="Z" value="015300">河南省质量技术监督培训中心</option>
+											<option parentid="020000" deptflag="Z" value="021700">省食品药品评审查验中心</option>
+											<option parentid="010000" deptflag="Z" value="015500">河南省盐产品质量监测中心</option>
+											<option parentid="020000" deptflag="Z" value="021800">省食品药品评价中心</option>
+											<option parentid="010000" deptflag="Z" value="015600">河南省知识产权事务中心</option>
+											<option parentid="020000" deptflag="Z" value="021900">省食品药品稽查局</option>
+											<option parentid="010000" deptflag="Z" value="015700">方圆认证集团河南有限公司</option>
+											<option parentid="020000" deptflag="Z" value="022000">省口岸食品检验检测所</option>
+											<option parentid="020000" deptflag="Z" value="022100">省食品药品宣传教育中心</option>
+											<option parentid="020000" deptflag="Z" value="022200">省食品药品安全信息中心</option>
+											<option parentid="020000" deptflag="Z" value="022300">省药监局机关服务中心</option>
+											<option parentid="030000" deptflag="B" value="030001">局领导</option>
+											<option parentid="030000" deptflag="B" value="030002">办公室</option>
+											<option parentid="030000" deptflag="B" value="030003">法律事务处</option>
+											<option parentid="030000" deptflag="B" value="030004">协调管理处</option>
+											<option parentid="030000" deptflag="B" value="030005">专利代办处</option>
+											<option parentid="030000" deptflag="B" value="030006">规划发展处</option>
+											<option parentid="040000" deptflag="B" value="040001">局领导</option>
+											<option parentid="040000" deptflag="B" value="040002">综合处</option>
+											<option parentid="040000" deptflag="B" value="040003">人事教育处</option>
+											<option parentid="040000" deptflag="B" value="040004">政策法规处</option>
+											<option parentid="040000" deptflag="B" value="040005">执法监督一处</option>
+											<option parentid="040000" deptflag="B" value="040006">执法稽查二处</option>
+											<option parentid="040000" deptflag="B" value="040007">执法稽查三处</option>
+										</select>
+										<br>
+										<select id="quiz3" name="quiz3" style="display: none;margin-top: 10px;width:500px;" onchange="f_select(3)">
+											<option deptflag="0" value="">请选择</option>
+											<option parentid="014900" deptflag="B" value="gsbm_20003561">党办</option>
+											<option parentid="013000" deptflag="B" value="013001">局领导</option>
+											<option parentid="013000" deptflag="B" value="013002">综合办公室</option>
+											<option parentid="013000" deptflag="B" value="013003">党务办公室</option>
+											<option parentid="013000" deptflag="B" value="013004">工业产品生产许可证审查科</option>
+											<option parentid="013000" deptflag="B" value="013005">认证认监审查科</option>
+											<option parentid="013000" deptflag="B" value="013006">计量审查科</option>
+											<option parentid="013000" deptflag="B" value="013007">受理科</option>
+											<option parentid="013000" deptflag="B" value="013008">人事科</option>
+											<option parentid="013000" deptflag="B" value="013009">财务科</option>
+											<option parentid="013000" deptflag="B" value="013010">评审专家管理科</option>
+											<option parentid="013300" deptflag="B" value="013301">办公室</option>
+											<option parentid="013300" deptflag="B" value="013302">稽查队</option>
+											<option parentid="013300" deptflag="B" value="013303">财务室</option>
+											<option parentid="021900" deptflag="B" value="013501">局领导</option>
+											<option parentid="021900" deptflag="B" value="013502">办公室</option>
+											<option parentid="021900" deptflag="B" value="013503">党办</option>
+											<option parentid="021900" deptflag="B" value="013504">执法监督科</option>
+											<option parentid="021900" deptflag="B" value="013505">稽查一科</option>
+											<option parentid="021900" deptflag="B" value="013506">稽查二科</option>
+											<option parentid="021900" deptflag="B" value="013507">稽查三科</option>
+											<option parentid="021900" deptflag="B" value="013508">互联网信息监测科</option>
+											<option parentid="021900" deptflag="B" value="013509">投诉举报科</option>
+											<option parentid="021900" deptflag="B" value="013510">人事科</option>
+											<option parentid="021900" deptflag="B" value="013511">财务科</option>
+											<option parentid="021900" deptflag="B" value="013512">稽查临时交接小组</option>
+											<option parentid="021900" deptflag="B" value="013513">未定科室</option>
+											<option parentid="013600" deptflag="B" value="013601">秘书长</option>
+											<option parentid="013600" deptflag="B" value="013602">副秘书长</option>
+											<option parentid="013600" deptflag="B" value="013603">办公室</option>
+											<option parentid="013600" deptflag="B" value="013604">组织联络部</option>
+											<option parentid="013600" deptflag="B" value="013605">投诉部</option>
+											<option parentid="013600" deptflag="B" value="013606">商品服务监督部</option>
+											<option parentid="013600" deptflag="B" value="013607">消费指导部</option>
+											<option parentid="013600" deptflag="B" value="013608">新闻与公共事务部</option>
+											<option parentid="013600" deptflag="B" value="013609">法律与理论研究部</option>
+											<option parentid="013600" deptflag="B" value="013610">财务部</option>
+											<option parentid="013700" deptflag="B" value="013701">校领导</option>
+											<option parentid="013700" deptflag="B" value="013702">办公室</option>
+											<option parentid="013700" deptflag="B" value="013703">人事科</option>
+											<option parentid="013700" deptflag="B" value="013704">党委办公室</option>
+											<option parentid="013700" deptflag="B" value="013705">监察室</option>
+											<option parentid="013700" deptflag="B" value="013706">教务科</option>
+											<option parentid="013700" deptflag="B" value="013707">基础教研室</option>
+											<option parentid="013700" deptflag="B" value="013708">会计教研室</option>
+											<option parentid="013700" deptflag="B" value="013709">工商（工科）教研室</option>
+											<option parentid="013700" deptflag="B" value="013710">计算机教研室</option>
+											<option parentid="013700" deptflag="B" value="013711">实训中心</option>
+											<option parentid="013700" deptflag="B" value="013712">图书馆</option>
+											<option parentid="013700" deptflag="B" value="013713">学生科</option>
+											<option parentid="013700" deptflag="B" value="013714">招生就业办公室</option>
+											<option parentid="013700" deptflag="B" value="013715">团委</option>
+											<option parentid="013700" deptflag="B" value="013716">工会办公室</option>
+											<option parentid="013700" deptflag="B" value="013717">保卫科</option>
+											<option parentid="013700" deptflag="B" value="013718">财务科</option>
+											<option parentid="013700" deptflag="B" value="013719">离退休人员管理科</option>
+											<option parentid="013700" deptflag="B" value="013720">培训中心、开放（特色）教育办公室</option>
+											<option parentid="013700" deptflag="B" value="013721">后勤管理科</option>
+											<option parentid="013800" deptflag="B" value="013801">局领导</option>
+											<option parentid="013800" deptflag="B" value="013802">综合部</option>
+											<option parentid="013800" deptflag="B" value="013803">人力资源部</option>
+											<option parentid="013800" deptflag="B" value="013804">财务部</option>
+											<option parentid="013800" deptflag="B" value="013805">信息部</option>
+											<option parentid="013800" deptflag="B" value="013806">运行保障部</option>
+											<option parentid="013800" deptflag="B" value="013807">质量管理部</option>
+											<option parentid="013800" deptflag="B" value="013808">党建群团部</option>
+											<option parentid="013800" deptflag="B" value="013809">收文与档案管理部</option>
+											<option parentid="013800" deptflag="B" value="013810">形式审查部</option>
+											<option parentid="013800" deptflag="B" value="013811">实质审查一部</option>
+											<option parentid="013800" deptflag="B" value="013812">实质审查二部</option>
+											<option parentid="013800" deptflag="B" value="013813">实质审查三部</option>
+											<option parentid="013800" deptflag="B" value="013814">实质审查四部</option>
+											<option parentid="013800" deptflag="B" value="013815">实质审查五部</option>
+											<option parentid="013800" deptflag="B" value="013816">实质审查六部</option>
+											<option parentid="013800" deptflag="B" value="013817">省局机关服务中心帮助工作</option>
+											<option parentid="013800" deptflag="B" value="013818">省局机关党委帮助工作</option>
+											<option parentid="013800" deptflag="B" value="013819">省局财务处帮助工作</option>
+											<option parentid="013800" deptflag="B" value="013820">市场研究中心帮助工作</option>
+											<option parentid="013900" deptflag="B" value="013901">中心领导</option>
+											<option parentid="013900" deptflag="B" value="013902">综合科</option>
+											<option parentid="013900" deptflag="B" value="013903">人事科</option>
+											<option parentid="013900" deptflag="B" value="013904">财务科</option>
+											<option parentid="013900" deptflag="B" value="013905">项目管理科</option>
+											<option parentid="013900" deptflag="B" value="013906">规划指导科</option>
+											<option parentid="013900" deptflag="B" value="013907">软件管理科</option>
+											<option parentid="013900" deptflag="B" value="013908">数据管理科</option>
+											<option parentid="013900" deptflag="B" value="013909">运行维护科</option>
+											<option parentid="013900" deptflag="B" value="013910">信息安全科</option>
+											<option parentid="013900" deptflag="B" value="013911">网站管理科</option>
+											<option parentid="013900" deptflag="B" value="013912">大数据分析应用科</option>
+											<option parentid="013900" deptflag="B" value="013913">广告监测科</option>
+											<option parentid="013900" deptflag="B" value="013914">电子监察科</option>
+											<option parentid="013900" deptflag="B" value="013915">12315指挥调度科</option>
+											<option parentid="013900" deptflag="B" value="013916">外借价格监督检查处</option>
+											<option parentid="013900" deptflag="B" value="013917">外借办公室</option>
+											<option parentid="013900" deptflag="B" value="013918">外借信用监督管理处</option>
+											<option parentid="013900" deptflag="B" value="013919">外借机关服务中心</option>
+											<option parentid="013900" deptflag="B" value="013920">外借商标审查中心</option>
+											<option parentid="013900" deptflag="B" value="013921">外借机关党委</option>
+											<option parentid="014000" deptflag="B" value="014001">中心领导</option>
+											<option parentid="014000" deptflag="B" value="014002">综合科</option>
+											<option parentid="014000" deptflag="B" value="014003">业务科</option>
+											<option parentid="014000" deptflag="B" value="014004">运维科</option>
+											<option parentid="014100" deptflag="B" value="014101">秘书长</option>
+											<option parentid="014100" deptflag="B" value="014102">办公室</option>
+											<option parentid="014100" deptflag="B" value="014103">宣传教育部</option>
+											<option parentid="014100" deptflag="B" value="014104">组织联络部</option>
+											<option parentid="014100" deptflag="B" value="014105">会员服务部</option>
+											<option parentid="014100" deptflag="B" value="014106">信息服务部</option>
+											<option parentid="014100" deptflag="B" value="014107">其它</option>
+											<option parentid="014200" deptflag="B" value="014201">办公室</option>
+											<option parentid="014200" deptflag="B" value="014202">编辑部</option>
+											<option parentid="014200" deptflag="B" value="014203">调研部</option>
+											<option parentid="014200" deptflag="B" value="014204">人事科</option>
+											<option parentid="014200" deptflag="B" value="014205">学会部</option>
+											<option parentid="014200" deptflag="B" value="014206">信息部</option>
+											<option parentid="014200" deptflag="B" value="014207">财务部</option>
+											<option parentid="014300" deptflag="B" value="014301">中心领导</option>
+											<option parentid="014300" deptflag="B" value="014302">其它处室</option>
+											<option parentid="014500" deptflag="B" value="014501">局领导</option>
+											<option parentid="014500" deptflag="B" value="014502">办公室</option>
+											<option parentid="014500" deptflag="B" value="014503">人事科</option>
+											<option parentid="014500" deptflag="B" value="014504">财务科</option>
+											<option parentid="014500" deptflag="B" value="014505">党委办公室</option>
+											<option parentid="014500" deptflag="B" value="014506">工会</option>
+											<option parentid="014500" deptflag="B" value="014507">大数据办公室</option>
+											<option parentid="014500" deptflag="B" value="014508">法规科</option>
+											<option parentid="014500" deptflag="B" value="014509">执法科</option>
+											<option parentid="014500" deptflag="B" value="014510">棉花监督科</option>
+											<option parentid="014500" deptflag="B" value="014511">纤维制品监督科</option>
+											<option parentid="014500" deptflag="B" value="014512">校服监督科</option>
+											<option parentid="014500" deptflag="B" value="014513">社会事业监督科</option>
+											<option parentid="014500" deptflag="B" value="014514">电商科</option>
+											<option parentid="014500" deptflag="B" value="014515">质量提升办</option>
+											<option parentid="014500" deptflag="B" value="014516">科技标准科</option>
+											<option parentid="014500" deptflag="B" value="014517">业务管理科</option>
+											<option parentid="014500" deptflag="B" value="014518">事业发展部</option>
+											<option parentid="014500" deptflag="B" value="014519">服装监督部</option>
+											<option parentid="014500" deptflag="B" value="014520">计量站</option>
+											<option parentid="014500" deptflag="B" value="014521">国家中心</option>
+											<option parentid="014500" deptflag="B" value="014522">棉花公检部</option>
+											<option parentid="014500" deptflag="B" value="014523">客户服务部</option>
+											<option parentid="014500" deptflag="B" value="014524">纤维制品站</option>
+											<option parentid="014500" deptflag="B" value="014525">国家中心</option>
+											<option parentid="014600" deptflag="B" value="014601">院领导</option>
+											<option parentid="014600" deptflag="B" value="014602">行政管理部</option>
+											<option parentid="014600" deptflag="B" value="014603">人力资源部</option>
+											<option parentid="014600" deptflag="B" value="014604">财务管理部</option>
+											<option parentid="014600" deptflag="B" value="014605">科技发展部</option>
+											<option parentid="014600" deptflag="B" value="014606">质量管理部</option>
+											<option parentid="014600" deptflag="B" value="014607">业务部</option>
+											<option parentid="014600" deptflag="B" value="014608">后勤保障部</option>
+											<option parentid="014600" deptflag="B" value="014609">信息中心</option>
+											<option parentid="014600" deptflag="B" value="014610">新区计量产业园管理部</option>
+											<option parentid="014600" deptflag="B" value="014611">科技委</option>
+											<option parentid="014600" deptflag="B" value="014612">基建办</option>
+											<option parentid="014600" deptflag="B" value="014613">长度计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014614">热学计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014615">力学计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014616">质量计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014617">电学计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014618">电磁兼容研究所</option>
+											<option parentid="014600" deptflag="B" value="014619">无线电所计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014620">声学计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014621">流量计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014622">化学计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014623">医学计量研究所</option>
+											<option parentid="014600" deptflag="B" value="014624">动态轴重仪检定所</option>
+											<option parentid="014600" deptflag="B" value="014625">机动车检测技术研究所</option>
+											<option parentid="014600" deptflag="B" value="014626">产业检测研究所</option>
+											<option parentid="014600" deptflag="Z" value="014627">河南省溯源计量工程技术研究中心有限公司</option>
+											<option parentid="014700" deptflag="B" value="014701">院领导</option>
+											<option parentid="014700" deptflag="B" value="014702">质量总监</option>
+											<option parentid="014700" deptflag="B" value="014703">办公室</option>
+											<option parentid="014700" deptflag="B" value="014704">精神文明创建办公室</option>
+											<option parentid="014700" deptflag="B" value="014705">党务办公室</option>
+											<option parentid="014700" deptflag="B" value="014706">创新基地办公室</option>
+											<option parentid="014700" deptflag="B" value="014707">财务管理部</option>
+											<option parentid="014700" deptflag="B" value="014708">标准文献与服务部</option>
+											<option parentid="014700" deptflag="B" value="014709">标准所</option>
+											<option parentid="014700" deptflag="B" value="014710">标准图书发行站</option>
+											<option parentid="014700" deptflag="B" value="014711">物品编码部</option>
+											<option parentid="014700" deptflag="B" value="014712">源数据工作站</option>
+											<option parentid="014700" deptflag="B" value="014713">科研管理部</option>
+											<option parentid="014700" deptflag="B" value="014714">质量所</option>
+											<option parentid="014700" deptflag="B" value="014715">业务发展部</option>
+											<option parentid="014700" deptflag="B" value="014716">借调直属分局工作</option>
+											<option parentid="014800" deptflag="B" value="014801">院/中心领导</option>
+											<option parentid="014800" deptflag="B" value="014802">国家粮油及制品质量监督检验中心（河南）</option>
+											<option parentid="014800" deptflag="" value="014803">战略发展委员会</option>
+											<option parentid="014800" deptflag="B" value="014804">组织决策委员会</option>
+											<option parentid="014800" deptflag="B" value="014805">副总工程师</option>
+											<option parentid="014800" deptflag="B" value="014806">行政管理部</option>
+											<option parentid="014800" deptflag="B" value="014807">党委办公室</option>
+											<option parentid="014800" deptflag="B" value="014808">纪委办公室</option>
+											<option parentid="014800" deptflag="B" value="014809">人力资源部</option>
+											<option parentid="014800" deptflag="B" value="014810">财务管理部</option>
+											<option parentid="014800" deptflag="B" value="014811">战略发展部</option>
+											<option parentid="014800" deptflag="B" value="014812">政府服务部</option>
+											<option parentid="014800" deptflag="B" value="014813">质量技术部</option>
+											<option parentid="014800" deptflag="B" value="014814">业务管理部</option>
+											<option parentid="014800" deptflag="B" value="014815">设备保障部</option>
+											<option parentid="014800" deptflag="B" value="014816">科研管理部</option>
+											<option parentid="014800" deptflag="B" value="014817">市场发展部</option>
+											<option parentid="014800" deptflag="B" value="014818">风险监控中心</option>
+											<option parentid="014800" deptflag="B" value="014819">消防中心</option>
+											<option parentid="014800" deptflag="B" value="014820">食品检验中心</option>
+											<option parentid="014800" deptflag="B" value="014821">电气检验中心</option>
+											<option parentid="014800" deptflag="B" value="014822">石化检验中心</option>
+											<option parentid="014800" deptflag="B" value="014823">轻工检验中心</option>
+											<option parentid="014800" deptflag="B" value="014824">橡塑检验中心</option>
+											<option parentid="014800" deptflag="B" value="014825">机械检验中心</option>
+											<option parentid="014800" deptflag="B" value="014826">建材检验中心</option>
+											<option parentid="014800" deptflag="B" value="014827">珠宝检验中心</option>
+											<option parentid="014800" deptflag="B" value="014828">涂料检验中心</option>
+											<option parentid="014800" deptflag="B" value="014829">石陶检验中心</option>
+											<option parentid="014800" deptflag="B" value="014830">认证中心</option>
+											<option parentid="014800" deptflag="B" value="014831">许昌基地筹建办公室</option>
+											<option parentid="014800" deptflag="B" value="014832">建材协会</option>
+											<option parentid="014800" deptflag="B" value="014833">眼镜协会</option>
+											<option parentid="014800" deptflag="B" value="014834">广东工作站</option>
+											<option parentid="014800" deptflag="B" value="014835">省局基建办</option>
+											<option parentid="014900" deptflag="B" value="014901">院领导</option>
+											<option parentid="014900" deptflag="B" value="014902">副总工</option>
+											<option parentid="014900" deptflag="B" value="014903">办公室</option>
+											<option parentid="014900" deptflag="B" value="014904">党委办公室</option>
+											<option parentid="014900" deptflag="B" value="014905">纪检监察室</option>
+											<option parentid="014900" deptflag="B" value="014906">人办资源部</option>
+											<option parentid="014900" deptflag="B" value="014907">财务管理部</option>
+											<option parentid="014900" deptflag="B" value="014908">公积金办</option>
+											<option parentid="014900" deptflag="B" value="014909">技术部</option>
+											<option parentid="014900" deptflag="B" value="014910">质量部</option>
+											<option parentid="014900" deptflag="B" value="014911">基建办</option>
+											<option parentid="014900" deptflag="B" value="014912">安全管理部</option>
+											<option parentid="014900" deptflag="B" value="014913">科研管理部、RBI二室</option>
+											<option parentid="014900" deptflag="B" value="014914">业务管理部</option>
+											<option parentid="014900" deptflag="B" value="014915">评审管理部</option>
+											<option parentid="014900" deptflag="B" value="014916">固定资产管理部</option>
+											<option parentid="014900" deptflag="B" value="014917">博士工作站</option>
+											<option parentid="014900" deptflag="B" value="014918">实践部</option>
+											<option parentid="014900" deptflag="B" value="014919">产品质量监督研究所</option>
+											<option parentid="014900" deptflag="B" value="014920">高压储气井检验研究所</option>
+											<option parentid="014900" deptflag="B" value="014921">长管拖车检验研究所</option>
+											<option parentid="014900" deptflag="B" value="014922">无损检测实验室</option>
+											<option parentid="014900" deptflag="B" value="014923">工业锅炉检验研究一所</option>
+											<option parentid="014900" deptflag="B" value="014924">服务大厅、工业锅炉检验研究二所</option>
+											<option parentid="014900" deptflag="B" value="014925">工业锅炉检验研究四所</option>
+											<option parentid="014900" deptflag="B" value="014926">化工新密检验室</option>
+											<option parentid="014900" deptflag="B" value="014927">电站锅炉检验研究一所一室</option>
+											<option parentid="014900" deptflag="B" value="014928">电站锅炉检验研究一所二室</option>
+											<option parentid="014900" deptflag="B" value="014929">电站锅炉检验研究二所一室</option>
+											<option parentid="014900" deptflag="B" value="014930">电站锅炉检验研究二所二室</option>
+											<option parentid="014900" deptflag="B" value="014931">电站锅炉检验研究三所一室</option>
+											<option parentid="014900" deptflag="B" value="014932">电站锅炉检验研究三所二室</option>
+											<option parentid="014900" deptflag="B" value="014933">化工电站锅炉检验一室</option>
+											<option parentid="014900" deptflag="B" value="014934">化工电站锅炉检验二室</option>
+											<option parentid="014900" deptflag="B" value="014935">压力容器检验一所</option>
+											<option parentid="014900" deptflag="B" value="014936">压力容器检验二所</option>
+											<option parentid="014900" deptflag="B" value="014937">压力容器检验三所</option>
+											<option parentid="014900" deptflag="B" value="014938">化工压力容器检验室</option>
+											<option parentid="014900" deptflag="B" value="014939">风险评估与检验研究中心</option>
+											<option parentid="014900" deptflag="B" value="014940">罐车检验研究所</option>
+											<option parentid="014900" deptflag="B" value="014941">老职工组</option>
+											<option parentid="014900" deptflag="B" value="014942">常压储罐检验研究所</option>
+											<option parentid="014900" deptflag="B" value="014943">压力管道检验研究一所</option>
+											<option parentid="014900" deptflag="B" value="014944">压力管道检验研究二所</option>
+											<option parentid="014900" deptflag="B" value="014945">压力管道检验研究三所</option>
+											<option parentid="014900" deptflag="B" value="014946">直管县检验分院</option>
+											<option parentid="014900" deptflag="B" value="014947">国阀中心、型式试验中心</option>
+											<option parentid="014900" deptflag="B" value="014948">焊工考试中心</option>
+											<option parentid="014900" deptflag="B" value="014949">安全阀校验中心</option>
+											<option parentid="014900" deptflag="B" value="014950">能效测试研究所</option>
+											<option parentid="014900" deptflag="Z" value="014960">安阳分院</option>
+											<option parentid="014900" deptflag="Z" value="014961">鹤壁分院</option>
+											<option parentid="014900" deptflag="Z" value="014962">济源分院</option>
+											<option parentid="014900" deptflag="Z" value="014963">焦作分院</option>
+											<option parentid="014900" deptflag="Z" value="014964">开封分院</option>
+											<option parentid="014900" deptflag="Z" value="014965">洛阳分院</option>
+											<option parentid="014900" deptflag="Z" value="014966">漯河分院</option>
+											<option parentid="014900" deptflag="Z" value="014967">南阳分院</option>
+											<option parentid="014900" deptflag="Z" value="014968">平顶山分院</option>
+											<option parentid="014900" deptflag="Z" value="014969">濮阳分院</option>
+											<option parentid="014900" deptflag="Z" value="014970">三门峡分院</option>
+											<option parentid="014900" deptflag="Z" value="014971">商丘分院</option>
+											<option parentid="014900" deptflag="Z" value="014972">新乡分院</option>
+											<option parentid="014900" deptflag="Z" value="014973">信阳分院</option>
+											<option parentid="014900" deptflag="Z" value="014974">许昌分院</option>
+											<option parentid="014900" deptflag="Z" value="014975">周口分院</option>
+											<option parentid="014900" deptflag="Z" value="014976">驻马店分院</option>
+											<option parentid="015000" deptflag="B" value="015001">院领导</option>
+											<option parentid="015000" deptflag="B" value="015002">检验一所</option>
+											<option parentid="015000" deptflag="B" value="015003">检验二所</option>
+											<option parentid="015000" deptflag="B" value="015004">检验三所</option>
+											<option parentid="015000" deptflag="B" value="015005">检验四所</option>
+											<option parentid="015000" deptflag="B" value="015006">检验五所</option>
+											<option parentid="015000" deptflag="B" value="015007">考试一部</option>
+											<option parentid="015000" deptflag="B" value="015008">考试二部</option>
+											<option parentid="015000" deptflag="B" value="015009">综合办公室</option>
+											<option parentid="015000" deptflag="B" value="015010">资产管理部</option>
+											<option parentid="015000" deptflag="B" value="015011">财务部</option>
+											<option parentid="015000" deptflag="B" value="015012">人力资源部</option>
+											<option parentid="015000" deptflag="B" value="015013">业务部</option>
+											<option parentid="015000" deptflag="B" value="015014">质量发展部</option>
+											<option parentid="015000" deptflag="B" value="015015">信息中心</option>
+											<option parentid="015000" deptflag="B" value="015016">督查部</option>
+											<option parentid="015000" deptflag="B" value="015017">国家质检中心管理办公室</option>
+											<option parentid="015000" deptflag="B" value="015018">科技规划部</option>
+											<option parentid="015000" deptflag="B" value="015019">纪委办公室</option>
+											<option parentid="015000" deptflag="B" value="015020">长垣分院</option>
+											<option parentid="015000" deptflag="Z" value="015021">河南省特种设备安全检测研究院安阳分院</option>
+											<option parentid="015000" deptflag="Z" value="015022">河南省特种设备安全检测研究院鹤壁分院</option>
+											<option parentid="015000" deptflag="Z" value="015023">河南省特种设备安全检测研究院济源分院</option>
+											<option parentid="015000" deptflag="Z" value="015024">河南省特种设备安全检测研究院焦作分院</option>
+											<option parentid="015000" deptflag="Z" value="015025">河南省特种设备安全检测研究院开封分院</option>
+											<option parentid="015000" deptflag="Z" value="015026">河南省特种设备安全检测研究院洛阳分院</option>
+											<option parentid="015000" deptflag="Z" value="015027">河南省特种设备安全检测研究院漯河分院</option>
+											<option parentid="015000" deptflag="Z" value="015028">河南省特种设备安全检测研究院南阳分院</option>
+											<option parentid="015000" deptflag="Z" value="015029">河南省特种设备安全检测研究院平顶山分院</option>
+											<option parentid="015000" deptflag="Z" value="015030">河南省特种设备安全检测研究院濮阳分院</option>
+											<option parentid="015000" deptflag="Z" value="015031">河南省特种设备安全检测研究院三门峡分院</option>
+											<option parentid="015000" deptflag="Z" value="015032">河南省特种设备安全检测研究院商丘分院</option>
+											<option parentid="015000" deptflag="Z" value="015033">河南省特种设备安全检测研究院新乡分院</option>
+											<option parentid="015000" deptflag="Z" value="015034">河南省特种设备安全检测研究院信阳分院</option>
+											<option parentid="015000" deptflag="Z" value="015035">河南省特种设备安全检测研究院许昌分院</option>
+											<option parentid="015000" deptflag="Z" value="015036">河南省特种设备安全检测研究院周口分院</option>
+											<option parentid="015000" deptflag="Z" value="015037">河南省特种设备安全检测研究院驻马店分院</option>
+											<option parentid="015100" deptflag="B" value="015101">院领导</option>
+											<option parentid="015100" deptflag="B" value="015102">办公室</option>
+											<option parentid="015100" deptflag="B" value="015103">党办</option>
+											<option parentid="015100" deptflag="B" value="015104">财务</option>
+											<option parentid="015100" deptflag="B" value="015105">技术开发部</option>
+											<option parentid="015100" deptflag="B" value="015106">计量与特劳部</option>
+											<option parentid="015100" deptflag="B" value="015107">业务开发部</option>
+											<option parentid="015100" deptflag="B" value="015108">业务管理部</option>
+											<option parentid="015100" deptflag="B" value="015109">技术质量部</option>
+											<option parentid="015100" deptflag="B" value="015110">事业保障部</option>
+											<option parentid="015100" deptflag="B" value="015111">检验报告部</option>
+											<option parentid="015100" deptflag="B" value="015112">客户服务部</option>
+											<option parentid="015100" deptflag="B" value="015113">检测一部</option>
+											<option parentid="015100" deptflag="B" value="015114">检验二部</option>
+											<option parentid="015100" deptflag="B" value="015115">检测三部</option>
+											<option parentid="015200" deptflag="B" value="015201">局领导</option>
+											<option parentid="015200" deptflag="B" value="015202">借调省局小个专党建处</option>
+											<option parentid="015200" deptflag="B" value="015203">办公室</option>
+											<option parentid="015200" deptflag="B" value="015204">党办</option>
+											<option parentid="015200" deptflag="B" value="015205">计划财务部</option>
+											<option parentid="015200" deptflag="B" value="015206">12365投诉受理部</option>
+											<option parentid="015200" deptflag="B" value="015207">特种设备96333信息部</option>
+											<option parentid="015200" deptflag="B" value="015208">应急保障部</option>
+											<option parentid="015200" deptflag="B" value="015209">质量信用部</option>
+											<option parentid="015200" deptflag="B" value="015210">统计分析部</option>
+											<option parentid="015200" deptflag="B" value="015211">缺陷产品召回部</option>
+											<option parentid="015200" deptflag="B" value="015212">工会</option>
+											<option parentid="015300" deptflag="B" value="015301">中心领导</option>
+											<option parentid="015300" deptflag="B" value="015302">办公室</option>
+											<option parentid="015300" deptflag="B" value="015303">财务部</option>
+											<option parentid="015300" deptflag="B" value="015304">鉴定站</option>
+											<option parentid="015300" deptflag="B" value="015305">培训一部</option>
+											<option parentid="015300" deptflag="B" value="015306">培训二部</option>
+											<option parentid="022000" deptflag="B" value="015401">所领导</option>
+											<option parentid="022000" deptflag="B" value="015402">所长助理</option>
+											<option parentid="022000" deptflag="B" value="015403">办公室</option>
+											<option parentid="022000" deptflag="B" value="015404">信息科</option>
+											<option parentid="022000" deptflag="B" value="015405">人事教育科</option>
+											<option parentid="022000" deptflag="B" value="015406">党务及纪检监察室</option>
+											<option parentid="022000" deptflag="B" value="015407">财务科</option>
+											<option parentid="022000" deptflag="B" value="015408">质量管理科</option>
+											<option parentid="022000" deptflag="B" value="015409">设备管理科</option>
+											<option parentid="022000" deptflag="B" value="015410">抽样办公室</option>
+											<option parentid="022000" deptflag="B" value="015411">业务管理室</option>
+											<option parentid="022000" deptflag="B" value="015412">理化一室</option>
+											<option parentid="022000" deptflag="B" value="015413">理化二室</option>
+											<option parentid="022000" deptflag="B" value="015414">理化三室</option>
+											<option parentid="022000" deptflag="B" value="015415">理化四室</option>
+											<option parentid="022000" deptflag="B" value="015416">微生物室</option>
+											<option parentid="022000" deptflag="B" value="015417">借调省局</option>
+											<option parentid="015500" deptflag="B" value="015501">中心领导</option>
+											<option parentid="015500" deptflag="B" value="015502">综合科</option>
+											<option parentid="015500" deptflag="B" value="015503">业务科</option>
+											<option parentid="015500" deptflag="B" value="015504">监督检查科</option>
+											<option parentid="015600" deptflag="B" value="015601">中心领导</option>
+											<option parentid="015600" deptflag="B" value="015602">办公室</option>
+											<option parentid="015600" deptflag="B" value="015603">财务</option>
+											<option parentid="015600" deptflag="B" value="015604">维权</option>
+											<option parentid="015600" deptflag="B" value="015605">信息</option>
+											<option parentid="015700" deptflag="B" value="015701">总经理</option>
+											<option parentid="015700" deptflag="B" value="015702">副总经理/兼管代</option>
+											<option parentid="015700" deptflag="B" value="015703">副总经理/兼事业发展部部长</option>
+											<option parentid="015700" deptflag="B" value="015704">总工</option>
+											<option parentid="015700" deptflag="B" value="015705">技术顾问</option>
+											<option parentid="015700" deptflag="B" value="015706">市场部</option>
+											<option parentid="015700" deptflag="B" value="015707">事业发展部</option>
+											<option parentid="015700" deptflag="B" value="015708">审核管理部</option>
+											<option parentid="015700" deptflag="B" value="015709">质量管理部</option>
+											<option parentid="015700" deptflag="B" value="015710">人力资源部</option>
+											<option parentid="015700" deptflag="B" value="015711">综合管理部</option>
+											<option parentid="021600" deptflag="B" value="021601">单位领导</option>
+											<option parentid="021600" deptflag="B" value="021602">办公室</option>
+											<option parentid="021600" deptflag="B" value="021603">党办（文明办）</option>
+											<option parentid="021600" deptflag="B" value="021604">人事科</option>
+											<option parentid="021600" deptflag="B" value="021605">财务科</option>
+											<option parentid="021600" deptflag="B" value="021606">总务科</option>
+											<option parentid="021600" deptflag="B" value="021607">质量管理科</option>
+											<option parentid="021600" deptflag="B" value="021608">信息管理科</option>
+											<option parentid="021600" deptflag="B" value="021609">业务室</option>
+											<option parentid="021600" deptflag="B" value="021610">工程技术中心</option>
+											<option parentid="021600" deptflag="B" value="021611">生物检测室</option>
+											<option parentid="021600" deptflag="B" value="021612">体外诊断试剂检测室</option>
+											<option parentid="021600" deptflag="B" value="021613">电磁兼容检测室</option>
+											<option parentid="021600" deptflag="B" value="021614">化学检测室</option>
+											<option parentid="021600" deptflag="B" value="021615">物理检测室</option>
+											<option parentid="021600" deptflag="B" value="021616">医用电气检测一室</option>
+											<option parentid="021600" deptflag="B" value="021617">医用电气检测二室</option>
+											<option parentid="021600" deptflag="B" value="021618">借调省局服务中心</option>
+											<option parentid="021700" deptflag="B" value="021701">中心领导</option>
+											<option parentid="021700" deptflag="B" value="021702">办公室</option>
+											<option parentid="021700" deptflag="B" value="021703">人事科</option>
+											<option parentid="021700" deptflag="B" value="021704">财务科</option>
+											<option parentid="021700" deptflag="B" value="021705">审评一科</option>
+											<option parentid="021700" deptflag="B" value="021706">审评二科</option>
+											<option parentid="021700" deptflag="B" value="021707">审评三科</option>
+											<option parentid="021700" deptflag="B" value="021708">查验一科</option>
+											<option parentid="021700" deptflag="B" value="021709">查验二科</option>
+											<option parentid="021700" deptflag="B" value="021710">查验三科</option>
+											<option parentid="021700" deptflag="B" value="021711">查验四科</option>
+											<option parentid="021700" deptflag="B" value="021712">查验五科</option>
+											<option parentid="021700" deptflag="B" value="021713">质量管理科</option>
+											<option parentid="021700" deptflag="B" value="021714">综合业务科</option>
+											<option parentid="021800" deptflag="B" value="021801">中心领导</option>
+											<option parentid="021800" deptflag="B" value="021802">办公室</option>
+											<option parentid="021800" deptflag="B" value="021803">党务人事科</option>
+											<option parentid="021800" deptflag="B" value="021804">财务科</option>
+											<option parentid="021800" deptflag="B" value="021805">综合业务科</option>
+											<option parentid="021800" deptflag="B" value="021806">药品监测科</option>
+											<option parentid="021800" deptflag="B" value="021807">医疗器械监测科</option>
+											<option parentid="021800" deptflag="B" value="021808">化妆品监测科</option>
+											<option parentid="021800" deptflag="B" value="021809">药物滥用监测科</option>
+											<option parentid="022200" deptflag="B" value="022201">中心领导</option>
+											<option parentid="022200" deptflag="B" value="022202">综合科</option>
+											<option parentid="022200" deptflag="B" value="022203">信息化管理科</option>
+											<option parentid="022200" deptflag="B" value="022204">统计科</option>
+											<option parentid="022300" deptflag="B" value="022301">中心领导</option>
+											<option parentid="022300" deptflag="B" value="022302">局机关(局办公室）</option>
+											<option parentid="022300" deptflag="B" value="022303">办公室</option>
+											<option parentid="022300" deptflag="B" value="022304">财务室</option>
+											<option parentid="022300" deptflag="B" value="022305">膳食科</option>
+											<option parentid="022300" deptflag="B" value="022306">物业科</option>
+										</select>
+										<br>
+										<select id="quiz4" name="quiz4" style="display: none;margin-top: 10px;width:500px;" onchange="f_select(4)">
+											<option deptflag="0" value="">请选择</option>
+											<option parentid="014627" deptflag="B" value="01462701">综合管理部</option>
+											<option parentid="014627" deptflag="B" value="01462702">财务资源部</option>
+											<option parentid="014627" deptflag="B" value="01462703">职业培训部</option>
+											<option parentid="014627" deptflag="B" value="01462704">认证咨询部</option>
+											<option parentid="014627" deptflag="B" value="01462705">市场营销部</option>
+											<option parentid="014627" deptflag="B" value="01462706">环境检测部</option>
+											<option parentid="014627" deptflag="B" value="01462707">成果转化部</option>
+											<option parentid="014627" deptflag="B" value="01462708">油品检测部</option>
+											<option parentid="014960" deptflag="B" value="01496001">分院领导</option>
+											<option parentid="014960" deptflag="B" value="01496002">办公室</option>
+											<option parentid="014960" deptflag="B" value="01496003">财务室</option>
+											<option parentid="014960" deptflag="B" value="01496004">工会、党办</option>
+											<option parentid="014960" deptflag="B" value="01496005">总师办</option>
+											<option parentid="014960" deptflag="B" value="01496006">大厅</option>
+											<option parentid="014960" deptflag="B" value="01496007">定检一室</option>
+											<option parentid="014960" deptflag="B" value="01496008">定检二室</option>
+											<option parentid="014960" deptflag="B" value="01496009">定检三室</option>
+											<option parentid="014960" deptflag="B" value="01496010">定检四室</option>
+											<option parentid="014960" deptflag="B" value="01496011">定检五室</option>
+											<option parentid="014960" deptflag="B" value="01496012">监检室</option>
+											<option parentid="014960" deptflag="B" value="01496013">压力管道室</option>
+											<option parentid="014960" deptflag="B" value="01496014">林站州</option>
+											<option parentid="014961" deptflag="B" value="01496101">分院领导</option>
+											<option parentid="014961" deptflag="B" value="01496102">综合办公室</option>
+											<option parentid="014961" deptflag="B" value="01496103">业务室</option>
+											<option parentid="014961" deptflag="B" value="01496104">质量室</option>
+											<option parentid="014961" deptflag="B" value="01496105">检验室</option>
+											<option parentid="014961" deptflag="B" value="01496106">安全阀校验室</option>
+											<option parentid="014962" deptflag="B" value="01496201">分院领导</option>
+											<option parentid="014962" deptflag="B" value="01496202">办公室</option>
+											<option parentid="014962" deptflag="B" value="01496203">业务室</option>
+											<option parentid="014962" deptflag="B" value="01496204">安全阀校验室</option>
+											<option parentid="014962" deptflag="B" value="01496205">检验一室</option>
+											<option parentid="014962" deptflag="B" value="01496206">检验二室</option>
+											<option parentid="014962" deptflag="B" value="01496207">检验三室</option>
+											<option parentid="014962" deptflag="B" value="01496208">检验四室</option>
+											<option parentid="014963" deptflag="B" value="01496301">分院领导</option>
+											<option parentid="014963" deptflag="B" value="01496302">院长助理办公室</option>
+											<option parentid="014963" deptflag="B" value="01496303">总工办公室</option>
+											<option parentid="014963" deptflag="B" value="01496304">办公室</option>
+											<option parentid="014963" deptflag="B" value="01496305">总师办</option>
+											<option parentid="014963" deptflag="B" value="01496306">财务室</option>
+											<option parentid="014963" deptflag="B" value="01496307">事务中心</option>
+											<option parentid="014963" deptflag="B" value="01496308">业务室</option>
+											<option parentid="014963" deptflag="B" value="01496309">培训室</option>
+											<option parentid="014963" deptflag="B" value="01496310">市场部</option>
+											<option parentid="014963" deptflag="B" value="01496311">监检室</option>
+											<option parentid="014963" deptflag="B" value="01496312">定检一室</option>
+											<option parentid="014963" deptflag="B" value="01496313">定检二室</option>
+											<option parentid="014963" deptflag="B" value="01496314">定检三室</option>
+											<option parentid="014963" deptflag="B" value="01496315">定检四室</option>
+											<option parentid="014964" deptflag="B" value="01496401">分院领导</option>
+											<option parentid="014964" deptflag="B" value="01496402">办公室</option>
+											<option parentid="014964" deptflag="B" value="01496403">锅炉室</option>
+											<option parentid="014964" deptflag="B" value="01496404">容器室</option>
+											<option parentid="014964" deptflag="B" value="01496405">技术质量部</option>
+											<option parentid="014964" deptflag="B" value="01496406">财务室</option>
+											<option parentid="014964" deptflag="B" value="01496407">监检室</option>
+											<option parentid="014965" deptflag="B" value="01496501">分院领导</option>
+											<option parentid="014965" deptflag="B" value="01496502">副总工</option>
+											<option parentid="014965" deptflag="B" value="01496503">办公室</option>
+											<option parentid="014965" deptflag="B" value="01496504">财务室</option>
+											<option parentid="014965" deptflag="B" value="01496505">党群办</option>
+											<option parentid="014965" deptflag="B" value="01496506">安全办</option>
+											<option parentid="014965" deptflag="B" value="01496507">质管办</option>
+											<option parentid="014965" deptflag="B" value="01496508">业务室</option>
+											<option parentid="014965" deptflag="B" value="01496509">培训室</option>
+											<option parentid="014965" deptflag="B" value="01496510">罐车室</option>
+											<option parentid="014965" deptflag="B" value="01496511">检验一室</option>
+											<option parentid="014965" deptflag="B" value="01496512">检验二室</option>
+											<option parentid="014965" deptflag="B" value="01496513">检验三室</option>
+											<option parentid="014965" deptflag="B" value="01496514">检验四室</option>
+											<option parentid="014965" deptflag="B" value="01496515">检验五室</option>
+											<option parentid="014965" deptflag="B" value="01496516">检验六室</option>
+											<option parentid="014965" deptflag="B" value="01496517">检验七室</option>
+											<option parentid="014965" deptflag="B" value="01496518">检验八室</option>
+											<option parentid="014965" deptflag="B" value="01496519">检验九室</option>
+											<option parentid="014965" deptflag="B" value="01496520">检验十室</option>
+											<option parentid="014965" deptflag="B" value="01496521">检验十一室</option>
+											<option parentid="014965" deptflag="B" value="01496522">校验化验室</option>
+											<option parentid="014965" deptflag="B" value="01496523">大型室</option>
+											<option parentid="014966" deptflag="B" value="01496601">分院领导</option>
+											<option parentid="014966" deptflag="B" value="01496602">办公室</option>
+											<option parentid="014966" deptflag="B" value="01496603">财务室</option>
+											<option parentid="014966" deptflag="B" value="01496604">容器一室</option>
+											<option parentid="014966" deptflag="B" value="01496605">容器二室</option>
+											<option parentid="014966" deptflag="B" value="01496606">锅炉室</option>
+											<option parentid="014966" deptflag="B" value="01496607">业务室</option>
+											<option parentid="014966" deptflag="B" value="01496608">管道室</option>
+											<option parentid="014966" deptflag="B" value="01496609">电站锅炉室</option>
+											<option parentid="014967" deptflag="B" value="01496701">分院领导</option>
+											<option parentid="014967" deptflag="B" value="01496702">政研室</option>
+											<option parentid="014967" deptflag="B" value="01496703">助理室</option>
+											<option parentid="014967" deptflag="B" value="01496704">总师办、党办</option>
+											<option parentid="014967" deptflag="B" value="01496705">综合一室</option>
+											<option parentid="014967" deptflag="B" value="01496706">综合二室</option>
+											<option parentid="014967" deptflag="B" value="01496707">综合三室</option>
+											<option parentid="014967" deptflag="B" value="01496708">综合四室</option>
+											<option parentid="014967" deptflag="B" value="01496709">综合五室</option>
+											<option parentid="014967" deptflag="B" value="01496710">水质室</option>
+											<option parentid="014967" deptflag="B" value="01496711">电站锅炉安全阀室</option>
+											<option parentid="014967" deptflag="B" value="01496712">财务室</option>
+											<option parentid="014967" deptflag="B" value="01496713">产品监督检验室</option>
+											<option parentid="014967" deptflag="B" value="01496714">业务室</option>
+											<option parentid="014967" deptflag="B" value="01496715">培训室</option>
+											<option parentid="014967" deptflag="B" value="01496716">事业发展部</option>
+											<option parentid="014967" deptflag="B" value="01496717">罐车室</option>
+											<option parentid="014967" deptflag="B" value="01496718">办公室</option>
+											<option parentid="014968" deptflag="B" value="01496801">分院领导</option>
+											<option parentid="014968" deptflag="B" value="01496802">办公室</option>
+											<option parentid="014968" deptflag="B" value="01496803">业务部</option>
+											<option parentid="014968" deptflag="B" value="01496804">校验站</option>
+											<option parentid="014968" deptflag="B" value="01496805">总工办</option>
+											<option parentid="014968" deptflag="B" value="01496806">项目一部</option>
+											<option parentid="014968" deptflag="B" value="01496807">项目二部</option>
+											<option parentid="014968" deptflag="B" value="01496808">项目三部</option>
+											<option parentid="014968" deptflag="B" value="01496809">项目四部</option>
+											<option parentid="014968" deptflag="B" value="01496810">项目五部</option>
+											<option parentid="014968" deptflag="B" value="01496811">项目六部</option>
+											<option parentid="014969" deptflag="B" value="01496901">分院领导</option>
+											<option parentid="014969" deptflag="B" value="01496902">办公室</option>
+											<option parentid="014969" deptflag="B" value="01496903">人事政工室</option>
+											<option parentid="014969" deptflag="B" value="01496904">财务室</option>
+											<option parentid="014969" deptflag="B" value="01496905">业务室、球罐检验室</option>
+											<option parentid="014969" deptflag="B" value="01496906">培训室</option>
+											<option parentid="014969" deptflag="B" value="01496907">检验一室</option>
+											<option parentid="014969" deptflag="B" value="01496908">检验二室</option>
+											<option parentid="014969" deptflag="B" value="01496909">检验三室</option>
+											<option parentid="014969" deptflag="B" value="01496910">检验四室</option>
+											<option parentid="014969" deptflag="B" value="01496911">压力管道检验室</option>
+											<option parentid="014969" deptflag="B" value="01496912">槽车检验站</option>
+											<option parentid="014970" deptflag="B" value="01497001">分院领导</option>
+											<option parentid="014970" deptflag="B" value="01497002">综合办</option>
+											<option parentid="014970" deptflag="B" value="01497003">质技办</option>
+											<option parentid="014970" deptflag="B" value="01497004">综合检验站</option>
+											<option parentid="014970" deptflag="B" value="01497005">定检一室</option>
+											<option parentid="014970" deptflag="B" value="01497006">定检二室</option>
+											<option parentid="014970" deptflag="B" value="01497007">定检三室</option>
+											<option parentid="014971" deptflag="B" value="01497101">分院领导</option>
+											<option parentid="014971" deptflag="B" value="01497102">办公室</option>
+											<option parentid="014971" deptflag="B" value="01497103">检验室</option>
+											<option parentid="014971" deptflag="B" value="01497104">业务室</option>
+											<option parentid="014971" deptflag="B" value="01497105">党办</option>
+											<option parentid="014971" deptflag="B" value="01497106">人事</option>
+											<option parentid="014971" deptflag="B" value="01497107">财务室</option>
+											<option parentid="014972" deptflag="B" value="01497201">分院领导</option>
+											<option parentid="014972" deptflag="B" value="01497202">办公室</option>
+											<option parentid="014972" deptflag="B" value="01497203">财务室</option>
+											<option parentid="014972" deptflag="B" value="01497204">综合计划室</option>
+											<option parentid="014972" deptflag="B" value="01497205">技术质量室</option>
+											<option parentid="014972" deptflag="B" value="01497206">锅炉室</option>
+											<option parentid="014972" deptflag="B" value="01497207">容器管道室</option>
+											<option parentid="014972" deptflag="B" value="01497208">产品监检室</option>
+											<option parentid="014973" deptflag="B" value="01497301">分院领导</option>
+											<option parentid="014973" deptflag="B" value="01497302">支部委员</option>
+											<option parentid="014973" deptflag="B" value="01497303">办公室</option>
+											<option parentid="014973" deptflag="B" value="01497304">财务室</option>
+											<option parentid="014973" deptflag="B" value="01497305">业务室</option>
+											<option parentid="014973" deptflag="B" value="01497306">锅炉检验一科</option>
+											<option parentid="014973" deptflag="B" value="01497307">锅炉检验二科</option>
+											<option parentid="014973" deptflag="B" value="01497308">容器检验一科</option>
+											<option parentid="014973" deptflag="B" value="01497309">容器检验二科</option>
+											<option parentid="014973" deptflag="B" value="01497310">综合检验科</option>
+											<option parentid="014973" deptflag="B" value="01497311">培训室</option>
+											<option parentid="014973" deptflag="B" value="01497312">安全阀校验室</option>
+											<option parentid="014974" deptflag="B" value="01497401">分院领导</option>
+											<option parentid="014974" deptflag="B" value="01497402">办公室</option>
+											<option parentid="014974" deptflag="B" value="01497403">容器室</option>
+											<option parentid="014974" deptflag="B" value="01497404">管道室</option>
+											<option parentid="014974" deptflag="B" value="01497405">锅炉定检室</option>
+											<option parentid="014974" deptflag="B" value="01497406">电站监检室</option>
+											<option parentid="014974" deptflag="B" value="01497407">培训室</option>
+											<option parentid="014975" deptflag="B" value="01497501">分院领导</option>
+											<option parentid="014975" deptflag="B" value="01497502">办公室</option>
+											<option parentid="014975" deptflag="B" value="01497503">业务室</option>
+											<option parentid="014975" deptflag="B" value="01497504">技术部</option>
+											<option parentid="014975" deptflag="B" value="01497505">检验一室</option>
+											<option parentid="014975" deptflag="B" value="01497506">检验二室</option>
+											<option parentid="014975" deptflag="B" value="01497507">检验三室</option>
+											<option parentid="014975" deptflag="B" value="01497508">监检一室</option>
+											<option parentid="014975" deptflag="B" value="01497509">监检二室</option>
+											<option parentid="014975" deptflag="B" value="01497510">能效室</option>
+											<option parentid="014975" deptflag="B" value="01497511">安全阀校验室</option>
+											<option parentid="014975" deptflag="B" value="01497512">水质化验室</option>
+											<option parentid="014976" deptflag="B" value="01497601">分院领导</option>
+											<option parentid="014976" deptflag="B" value="01497602">办公室</option>
+											<option parentid="014976" deptflag="B" value="01497603">总工室</option>
+											<option parentid="014976" deptflag="B" value="01497604">业务室</option>
+											<option parentid="014976" deptflag="B" value="01497605">检验一室</option>
+											<option parentid="014976" deptflag="B" value="01497606">检验二室</option>
+											<option parentid="014976" deptflag="B" value="01497607">检验三室</option>
+											<option parentid="014976" deptflag="B" value="01497608">检验四室</option>
+											<option parentid="014976" deptflag="B" value="01497609">检验五室</option>
+											<option parentid="014976" deptflag="B" value="01497610">检验六室</option>
+											<option parentid="014976" deptflag="B" value="01497611">检验七室</option>
+											<option parentid="015021" deptflag="B" value="01502101">院领导</option>
+											<option parentid="015021" deptflag="B" value="01502102">办公室</option>
+											<option parentid="015021" deptflag="B" value="01502103">财务室</option>
+											<option parentid="015021" deptflag="B" value="01502104">总师办</option>
+											<option parentid="015021" deptflag="B" value="01502105">业务室</option>
+											<option parentid="015021" deptflag="B" value="01502106">检验一室</option>
+											<option parentid="015021" deptflag="B" value="01502107">检验二室</option>
+											<option parentid="015021" deptflag="B" value="01502108">检验三室</option>
+											<option parentid="015021" deptflag="B" value="01502109">检验四室</option>
+											<option parentid="015021" deptflag="B" value="01502110">检验五室</option>
+											<option parentid="015021" deptflag="B" value="01502111">财务室</option>
+											<option parentid="015021" deptflag="B" value="01502112">检验六室</option>
+											<option parentid="015021" deptflag="B" value="01502113">检验七室（考试中心）</option>
+											<option parentid="015021" deptflag="B" value="01502114">林州工作站</option>
+											<option parentid="015022" deptflag="B" value="01502201">院领导</option>
+											<option parentid="015022" deptflag="B" value="01502202">质量部</option>
+											<option parentid="015022" deptflag="B" value="01502203">党办</option>
+											<option parentid="015022" deptflag="B" value="01502204">人力资源</option>
+											<option parentid="015022" deptflag="B" value="01502205">财务室</option>
+											<option parentid="015022" deptflag="B" value="01502206">综合办</option>
+											<option parentid="015022" deptflag="B" value="01502207">业务室</option>
+											<option parentid="015022" deptflag="B" value="01502208">总工程师办公室</option>
+											<option parentid="015022" deptflag="B" value="01502209">检验一室</option>
+											<option parentid="015022" deptflag="B" value="01502210">检验二室</option>
+											<option parentid="015022" deptflag="B" value="01502211">检验三室</option>
+											<option parentid="015022" deptflag="B" value="01502212">检验四室</option>
+											<option parentid="015022" deptflag="B" value="01502213">培训室</option>
+											<option parentid="015023" deptflag="B" value="01502301">院长办公室</option>
+											<option parentid="015023" deptflag="B" value="01502302">副院长办公室</option>
+											<option parentid="015023" deptflag="B" value="01502303">办公室、财务室</option>
+											<option parentid="015023" deptflag="B" value="01502304">业务室</option>
+											<option parentid="015023" deptflag="B" value="01502305">检验一室</option>
+											<option parentid="015023" deptflag="B" value="01502306">检验二室</option>
+											<option parentid="015024" deptflag="B" value="01502401">院领导</option>
+											<option parentid="015024" deptflag="B" value="01502402">总师办</option>
+											<option parentid="015024" deptflag="B" value="01502403">培训中心</option>
+											<option parentid="015024" deptflag="B" value="01502404">办公室</option>
+											<option parentid="015024" deptflag="B" value="01502405">检验一室</option>
+											<option parentid="015024" deptflag="B" value="01502406">检验二室</option>
+											<option parentid="015024" deptflag="B" value="01502407">检验三室</option>
+											<option parentid="015024" deptflag="B" value="01502408">检验四室</option>
+											<option parentid="015024" deptflag="B" value="01502409">检验五室</option>
+											<option parentid="015024" deptflag="B" value="01502410">检验六室</option>
+											<option parentid="015025" deptflag="B" value="01502501">领导班子</option>
+											<option parentid="015025" deptflag="B" value="01502502">办公室</option>
+											<option parentid="015025" deptflag="B" value="01502503">财务室</option>
+											<option parentid="015025" deptflag="B" value="01502504">党办</option>
+											<option parentid="015025" deptflag="B" value="01502505">检验一室</option>
+											<option parentid="015025" deptflag="B" value="01502506">检验二室</option>
+											<option parentid="015025" deptflag="B" value="01502507">检验三室</option>
+											<option parentid="015025" deptflag="B" value="01502508">检验四室</option>
+											<option parentid="015025" deptflag="B" value="01502509">检验五室</option>
+											<option parentid="015025" deptflag="B" value="01502510">检验六室</option>
+											<option parentid="015025" deptflag="B" value="01502511">业务大厅</option>
+											<option parentid="015025" deptflag="B" value="01502512">考试中心</option>
+											<option parentid="015026" deptflag="B" value="01502601">院领导</option>
+											<option parentid="015026" deptflag="B" value="01502602">办公室</option>
+											<option parentid="015026" deptflag="B" value="01502603">财务室</option>
+											<option parentid="015026" deptflag="B" value="01502604">业务室</option>
+											<option parentid="015026" deptflag="B" value="01502605">培训室</option>
+											<option parentid="015026" deptflag="B" value="01502606">检验一室</option>
+											<option parentid="015026" deptflag="B" value="01502607">检验二室</option>
+											<option parentid="015026" deptflag="B" value="01502608">检验三室</option>
+											<option parentid="015026" deptflag="B" value="01502609">检验四室</option>
+											<option parentid="015026" deptflag="B" value="01502610">检验五室</option>
+											<option parentid="015026" deptflag="B" value="01502611">检验六室</option>
+											<option parentid="015026" deptflag="B" value="01502612">检验七室</option>
+											<option parentid="015026" deptflag="B" value="01502613">检验八室</option>
+											<option parentid="015026" deptflag="B" value="01502614">检验九室</option>
+											<option parentid="015026" deptflag="B" value="01502615">检验十室</option>
+											<option parentid="015026" deptflag="B" value="01502616">总工办</option>
+											<option parentid="015026" deptflag="B" value="01502617">党群办</option>
+											<option parentid="015027" deptflag="B" value="01502701">分院班子</option>
+											<option parentid="015027" deptflag="B" value="01502702">综合办公室</option>
+											<option parentid="015027" deptflag="B" value="01502703">业务室</option>
+											<option parentid="015027" deptflag="B" value="01502704">检验一室</option>
+											<option parentid="015027" deptflag="B" value="01502705">检验二室</option>
+											<option parentid="015028" deptflag="B" value="01502801">院领导</option>
+											<option parentid="015028" deptflag="B" value="01502802">综合办公室</option>
+											<option parentid="015028" deptflag="B" value="01502803">财务室</option>
+											<option parentid="015028" deptflag="B" value="01502804">业务室</option>
+											<option parentid="015028" deptflag="B" value="01502805">检验一室</option>
+											<option parentid="015028" deptflag="B" value="01502806">检验二室</option>
+											<option parentid="015028" deptflag="B" value="01502807">检验三室</option>
+											<option parentid="015028" deptflag="B" value="01502808">检验四室</option>
+											<option parentid="015028" deptflag="B" value="01502809">检验五室</option>
+											<option parentid="015028" deptflag="B" value="01502810">检验六室</option>
+											<option parentid="015028" deptflag="B" value="01502811">检验七室</option>
+											<option parentid="015029" deptflag="B" value="01502901">院长室</option>
+											<option parentid="015029" deptflag="B" value="01502902">综合业务室</option>
+											<option parentid="015029" deptflag="B" value="01502903">财务室</option>
+											<option parentid="015029" deptflag="B" value="01502904">检验一室</option>
+											<option parentid="015029" deptflag="B" value="01502905">检验二室</option>
+											<option parentid="015029" deptflag="B" value="01502906">检验三室</option>
+											<option parentid="015029" deptflag="B" value="01502907">检验四室</option>
+											<option parentid="015029" deptflag="B" value="01502908">培训一室</option>
+											<option parentid="015029" deptflag="B" value="01502909">培训二室</option>
+											<option parentid="015030" deptflag="B" value="01503001">院领导</option>
+											<option parentid="015030" deptflag="B" value="01503002">办公室</option>
+											<option parentid="015030" deptflag="B" value="01503003">财务室</option>
+											<option parentid="015030" deptflag="B" value="01503004">业务室</option>
+											<option parentid="015030" deptflag="B" value="01503005">业务大厅</option>
+											<option parentid="015030" deptflag="B" value="01503006">检验一室</option>
+											<option parentid="015030" deptflag="B" value="01503007">检验二室</option>
+											<option parentid="015030" deptflag="B" value="01503008">检验三室</option>
+											<option parentid="015030" deptflag="B" value="01503009">检验四室</option>
+											<option parentid="015031" deptflag="B" value="01503101">院领导</option>
+											<option parentid="015031" deptflag="B" value="01503102">综合管理办公室</option>
+											<option parentid="015031" deptflag="B" value="01503103">业务管理办公室</option>
+											<option parentid="015031" deptflag="B" value="01503104">财务管理办公室</option>
+											<option parentid="015031" deptflag="B" value="01503105">督查管理办公室</option>
+											<option parentid="015031" deptflag="B" value="01503106">检验一部</option>
+											<option parentid="015031" deptflag="B" value="01503107">检验二部</option>
+											<option parentid="015031" deptflag="B" value="01503108">检验三部</option>
+											<option parentid="015031" deptflag="B" value="01503109">检验四部</option>
+											<option parentid="015032" deptflag="B" value="01503201">综合办公室</option>
+											<option parentid="015032" deptflag="B" value="01503202">业务室</option>
+											<option parentid="015032" deptflag="B" value="01503203">培训室</option>
+											<option parentid="015032" deptflag="B" value="01503204">检验一室</option>
+											<option parentid="015032" deptflag="B" value="01503205">检验二室</option>
+											<option parentid="015032" deptflag="B" value="01503206">检验三室</option>
+											<option parentid="015032" deptflag="B" value="01503207">检验四室</option>
+											<option parentid="015032" deptflag="B" value="01503208">检验五室</option>
+											<option parentid="015033" deptflag="B" value="01503301">分院领导成员</option>
+											<option parentid="015033" deptflag="B" value="01503302">办公室</option>
+											<option parentid="015033" deptflag="B" value="01503303">督查室</option>
+											<option parentid="015033" deptflag="B" value="01503304">总师办</option>
+											<option parentid="015033" deptflag="B" value="01503305">检验一室</option>
+											<option parentid="015033" deptflag="B" value="01503306">检验二室</option>
+											<option parentid="015033" deptflag="B" value="01503307">检验三室</option>
+											<option parentid="015033" deptflag="B" value="01503308">检验四室</option>
+											<option parentid="015033" deptflag="B" value="01503309">检验五室</option>
+											<option parentid="015033" deptflag="B" value="01503310">检验六室</option>
+											<option parentid="015033" deptflag="B" value="01503311">检验七室</option>
+											<option parentid="015034" deptflag="B" value="01503401">院领导</option>
+											<option parentid="015034" deptflag="B" value="01503402">综合办公室</option>
+											<option parentid="015034" deptflag="B" value="01503403">业务大厅</option>
+											<option parentid="015034" deptflag="B" value="01503404">特种设备检验一科</option>
+											<option parentid="015034" deptflag="B" value="01503405">特种设备检验二科</option>
+											<option parentid="015034" deptflag="B" value="01503406">特种设备检验三科</option>
+											<option parentid="015034" deptflag="B" value="01503407">特种设备检验四科</option>
+											<option parentid="015034" deptflag="B" value="01503408">特种设备检验五科</option>
+											<option parentid="015034" deptflag="B" value="01503409">特种设备检验六科</option>
+											<option parentid="015034" deptflag="B" value="01503410">总师办</option>
+											<option parentid="015034" deptflag="B" value="01503411">考试中心</option>
+											<option parentid="015035" deptflag="B" value="01503501">院领导</option>
+											<option parentid="015035" deptflag="B" value="01503502">办公室</option>
+											<option parentid="015035" deptflag="B" value="01503503">财务室</option>
+											<option parentid="015035" deptflag="B" value="01503504">总工办</option>
+											<option parentid="015035" deptflag="B" value="01503505">考试室</option>
+											<option parentid="015035" deptflag="B" value="01503506">业务室</option>
+											<option parentid="015035" deptflag="B" value="01503507">检验一室</option>
+											<option parentid="015035" deptflag="B" value="01503508">检验二室</option>
+											<option parentid="015035" deptflag="B" value="01503509">检验三室</option>
+											<option parentid="015035" deptflag="B" value="01503510">检验四室</option>
+											<option parentid="015035" deptflag="B" value="01503511">检验五室</option>
+											<option parentid="015035" deptflag="B" value="01503512">委托检验室</option>
+											<option parentid="015036" deptflag="B" value="01503601">院领导</option>
+											<option parentid="015036" deptflag="B" value="01503602">总工办</option>
+											<option parentid="015036" deptflag="B" value="01503603">财务部</option>
+											<option parentid="015036" deptflag="B" value="01503604">业务室</option>
+											<option parentid="015036" deptflag="B" value="01503605">检验一部</option>
+											<option parentid="015036" deptflag="B" value="01503606">检验二部</option>
+											<option parentid="015036" deptflag="B" value="01503607">检验三部</option>
+											<option parentid="015036" deptflag="B" value="01503608">检验四部</option>
+											<option parentid="015037" deptflag="B" value="01503701">院长办公室</option>
+											<option parentid="015037" deptflag="B" value="01503702">副院长办公室</option>
+											<option parentid="015037" deptflag="B" value="01503703">综合办公室</option>
+											<option parentid="015037" deptflag="B" value="01503704">财务室</option>
+											<option parentid="015037" deptflag="B" value="01503705">业务室</option>
+											<option parentid="015037" deptflag="B" value="01503706">培训室</option>
+											<option parentid="015037" deptflag="B" value="01503707">质量室</option>
+											<option parentid="015037" deptflag="B" value="01503708">检验一室</option>
+											<option parentid="015037" deptflag="B" value="01503709">检验二室</option>
+											<option parentid="015037" deptflag="B" value="01503710">检验三室</option>
+											<option parentid="015037" deptflag="B" value="01503711">检验四室</option>
+											<option parentid="015037" deptflag="B" value="01503712">检验五室</option>
+											<option parentid="015037" deptflag="B" value="01503713">检验六室</option>
+											<option parentid="015037" deptflag="B" value="01503714">检验七室</option>
+											<option parentid="015037" deptflag="B" value="01503715">检验八室</option>
+										</select>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">个人职务<br>( 多选 )</td>
+								<td colspan="9" align="center" style="overflow: auto;padding: 10px;">
+									<table id="grzwtable" width="95%" border="0">
+										<tr>
+											<td align="left" style="width:25%;"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox"
+												 value="z1" />党组书记</td>
+											<td align="left" style="width:25%;"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox"
+												 value="z12" />党办主任</td>
+											<td align="left" style="width:25%;"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox"
+												 value="1" />局长</td>
+											<td align="left" style="width:25%;"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox"
+												 value="13" />调研员</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z2" />党组副书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z13" />党办副主任</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="2" />副局长</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="14" />副调研员</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z3" />党委书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z14" />监察室主任</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="3" />纪检组长</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="15" />分局局长</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z4" />党委副书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z15" />监察室副主任</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="4" />总经济师</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="16" />分局副局长</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z5" />机关党委书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z16" />纪检委员</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="5" />总会计师</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="17" />科长</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z6" />机关党委专职书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z17" />党组成员</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="6" />总审计师</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="18" />副科长</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z7" />机关党委副书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z18" />班子成员</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="7" />巡视员</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="19" />所长</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z8" />机关纪委书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z19" />党委委员</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="8" />副巡视员</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="20" />副所长</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z9" />机关纪委副书记</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z20" />机关纪委委员</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="9" />处长</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="21" />主任科员</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z10" />纪委书记</td>
+											<td align="left"></td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="10" />主任</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="22" />副主任科员</td>
+										</tr>
+										<tr>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="z11" />纪委副书记</td>
+											<td align="left"></td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="11" />副处长</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="23" />股长</td>
+										</tr>
+										<tr>
+											<td align="left"></td>
+											<td align="left"></td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="12" />副主任</td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="24" />副股长</td>
+										</tr>
+										<tr>
+											<td align="left"></td>
+											<td align="left"></td>
+											<td align="left"></td>
+											<td align="left"><input name="zw_name" style="margin-right: 5px;" lay-skin="primary" type="checkbox" value="25" />科员</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">姓&nbsp;&nbsp;名</td>
+								<td>
+									<input id="xm" name="xm" maxlength="10" class="inputs" value=""></input>
+								</td>
+								<td align="center" class="td_txt1">性&nbsp;&nbsp;别</td>
+								<td colspan="2" align="left">
+									<select id="xb" name="xb" class="inputs" value="">
+										<option value="1">男</option>
+										<option value="2">女</option>
+									</select>
+
+								</td>
+
+								<td colspan="2" align="center" class="td_txt1">身份证号</td>
+								<td colspan="3"><input id="sfzh" name="sfzh" maxlength="20" class="inputs" value=""></input></td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt">曾用名</td>
+								<td><input id="cym" name="cym" maxlength="20" class="inputs" value=""></input></td>
+								<td align="center" class="td_txt1">民&nbsp;&nbsp;族</td>
+								<td colspan="2">
+									<select id="mz" name="mz" class="inputs" value="">
+										<option value="01">汉</option>
+										<option value="03">回</option>
+										<option value="06">苗</option>
+										<option value="08">壮</option>
+										<option value="11">满</option>
+										<option value="02">蒙古</option>
+										<option value="56">其他少数民族</option>
+									</select></td>
+								<td colspan="2" align="center" class="td_txt1">出生年月</td>
+								<td colspan="3">
+									<input align="left" type="text" id="csny" name="csny" readonly="readonly" class="inputs" onfocus="f_getcsny()"
+									 value="" />
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">籍&nbsp;&nbsp;贯</td>
+								<td><input id="jg" name="jg" class="inputs" maxlength="20" value=""></input></td>
+								<td align="center" class="td_txt1">婚姻状况</td>
+								<td colspan="2">
+									<select id="hyzk" name="hyzk" class="inputs" value="">
+										<option value="wh">未婚</option>
+										<option value="yh">已婚</option>
+										<option value="ds">单身</option>
+									</select>
+								</td>
+								<td colspan="2" align="center" class="td_txt1">文化程度</td>
+								<td colspan="3">
+									<select id="whcd" name="whcd" class="inputs" value="">
+										<option value="0"></option>
+										<option value="9">小学</option>
+										<option value="8">初中</option>
+										<option value="7">高中</option>
+										<option value="4">大专</option>
+										<option value="5">大学</option>
+										<option value="3">本科</option>
+										<option value="2">硕士</option>
+										<option value="1">博士</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">政治面貌</td>
+								<td>
+									<select id="zzmm" name="zzmm" class="inputs" value="">
+										<option value="01">中共党员</option>
+										<option value="02">中共预备党员</option>
+										<option value="12">民主党派</option>
+										<option value="03">共青团员</option>
+										<option value="99">群众</option>
+									</select>
+								</td>
+								<td align="center" class="td_txt1">入党时间</td>
+								<td colspan="2">
+									<input align="left" type="text" id="rdsj" name="rdsj" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+								<td align="center" colspan="2" class="td_txt1">参加工作时间</td>
+								<td colspan="3">
+									<input align="left" type="text" id="cjgzsj" name="cjgzsj" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt">照片</td>
+								<td colspan="8" align="left" style="overflow: auto;padding: 10px;">
+									<input type="file" style="width: 400px;border:1px dotted;" name="zp" id="zp" /> <br>
+									<font color="gray"> ( png 或 jpg格式的图像文件 大小不要超过 1M)</font>
+								</td>
+								<td class="input_val" align="center">
+									<img id="zpimg" style="width:100px;height:120px;" src=""></img>
+								</td>
+
+							</tr>
+							<tr>
+								<td align="center" class="td_txt">单位性质</td>
+								<td colspan="4">
+									<select id="dwxz" name="dwxz" class="inputs" value="">
+										<option value="1">机关单位</option>
+										<option value="2">事业单位</option>
+									</select>
+								</td>
+								<td align="center" colspan="2" class="td_txt1">个人级别</td>
+								<td width="78">
+									<select id="jb" name="jb" class="inputs" value="">
+
+										<option value=""></option>
+										<option value="0109">正厅</option>
+										<option value="z1">一级巡视员</option>
+										<option value="0110">副厅</option>
+										<option value="z2">二级巡视员</option>
+										<option value="0111">正处</option>
+										<option value="z3">一级调研员</option>
+										<option value="z4">二级调研员</option>
+										<option value="0112">副处</option>
+										<option value="z5">三级调研员</option>
+										<option value="z6">四级调研员</option>
+										<option value="0113">正科</option>
+										<option value="z7">一级主任科员</option>
+										<option value="z8">二级主任科员</option>
+										<option value="0114">副科</option>
+										<option value="z9">三级主任科员</option>
+										<option value="z10">四级主任科员</option>
+										<option value="2022">科员</option>
+									</select>
+								</td>
+								<td align="center" width="78" class="td_txt">个人职称</td>
+								<td><input id="zc" name="zc" class="inputs" value=""></input></td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">分管工作</td>
+								<td colspan="4"><input id="fggz" name="fggz" maxlength="50" class="inputs" value=""></input></td>
+								<td align="center" colspan="2" class="td_txt1">任现职时间</td>
+								<td colspan="3">
+									<input align="left" type="text" id="rxzsj" name="rxzsj" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">家庭住址</td>
+								<td colspan="7"><input id="zz" name="zz" maxlength="250" class="inputs" value=""></input></td>
+								<td align="center" class="td_txt">邮&nbsp;&nbsp;编</td>
+								<td><input id="yb" name="yb" class="inputs" value=""></input></td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt" rowspan="2">联系方式</td>
+								<td align="center" class="td_txt1">固定电话</td>
+								<td align="center" class="td_txt" colspan="8"><input id="gddh" name="gddh" check="number" maxlength="50" class="inputs"
+									 value=""></input></td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1">手&nbsp;&nbsp;机</td>
+								<td align="center" class="td_txt" colspan="8"><input id="sj" name="sj" check="number" maxlength="50" class="inputs"
+									 value=""></input></td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt1" style="height: 100px;">主要<br>
+									任职<br>
+									情况<br>
+								</td>
+								<td colspan="9" style="width: 695">
+									<p class=MsoNormal align=center style='text-align:left'><span lang=EN-US>
+											<textarea id="zyrzqk" name="zyrzqk" rows="6" style="width: 99%"></textarea>
+										</span></p>
+								</td>
+							</tr>
+							<tr style="display: none;">
+								<td align="center" rowspan="2" class="td_txt">主要
+									任职
+									情况</td>
+								<td align="center" height="23" class="td_txt">起始时间</td>
+								<td align="center" colspan="2" class="td_txt">终止时间</td>
+								<td align="center" colspan="4" class="td_txt">所在单位</td>
+								<td align="center" colspan="2" class="td_txt">担任职务</td>
+							</tr>
+							<tr style="display: none;">
+								<td align="center" colspan="9" style="height: 190;" class="td_txt">
+									<div style="width: 100%;height: 100%;position: relative;overflow: auto;vertical-align: top;text-align: center;">
+										<table style="width: 100%;height: 100%;">
+											<% 
+											for(int iflag=1;iflag<=28;iflag++){
+												String msg1 = null;
+												String msg2 = null;
+												String msg3 = null;
+												String msg4 = null;
+												
+												if(iflag<=8){
+													Class clazz = pojo.getClass(); 
+													Method m1 = clazz.getDeclaredMethod("getQssj"+iflag);
+													Method m2 = clazz.getDeclaredMethod("getZzsj"+iflag);
+													Method m3 = clazz.getDeclaredMethod("getSzdw"+iflag);
+													Method m4 = clazz.getDeclaredMethod("getDrzw"+iflag);
+													msg1 = (String) m1.invoke(pojo); 
+													msg2 = (String) m2.invoke(pojo); 
+													msg3 = (String) m3.invoke(pojo); 
+													msg4 = (String) m4.invoke(pojo); 
+												}else if(iflag>8){
+													Class clazz = expojo.getClass(); 
+													Method m1 = clazz.getDeclaredMethod("getQssj"+iflag);
+													Method m2 = clazz.getDeclaredMethod("getZzsj"+iflag);
+													Method m3 = clazz.getDeclaredMethod("getSzdw"+iflag);
+													Method m4 = clazz.getDeclaredMethod("getDrzw"+iflag);
+													msg1 = (String) m1.invoke(expojo); 
+													msg2 = (String) m2.invoke(expojo); 
+													msg3 = (String) m3.invoke(expojo); 
+													msg4 = (String) m4.invoke(expojo); 
+												}
+												
+												%>
+											<tr>
+												<td style="width: 15%;">
+													<input align="left" type="text" id="qssj<%=iflag %>" name="qssj<%=iflag %>" style="width: 80px;" value="<%=msg1 %>"
+													 endDate"" class="Wdate" READONLY onclick="WdatePicker({dateFmt:'yyyy-MM'})" />
+												</td>
+												<td style="width: 18%;">
+													<input align="left" type="text" id="zzsj<%=iflag %>" name="zzsj<%=iflag %>" style="width: 80px;" value="<%=msg2 %>"
+													 endDate"" class="Wdate" READONLY onclick="WdatePicker({dateFmt:'yyyy-MM'})" />
+												</td>
+												<td style="width: 39%;"><input id="szdw<%=iflag %>" name="szdw<%=iflag %>" maxlength="25" class="inputs"
+													 value="<%=msg3 %>"></input></td>
+												<td style="width:28%;">
+													<select id="drzw<%=iflag %>" name="drzw<%=iflag %>" style="width: 100px;" value="">
+														<%String drzw1=msg4;%>
+														<option value="0" <%if("0".equals(drzw1)){out.print("selected");} %>></option>
+														<option value="1" <%if("1".equals(drzw1)){out.print("selected");} %>>局长</option>
+														<option value="2" <%if("2".equals(drzw1)){out.print("selected");} %>>副局长</option>
+														<option value="3" <%if("3".equals(drzw1)){out.print("selected");} %>>纪检组长</option>
+														<option value="4" <%if("4".equals(drzw1)){out.print("selected");} %>>总经济师</option>
+														<option value="5" <%if("5".equals(drzw1)){out.print("selected");} %>>总会计师</option>
+														<option value="6" <%if("6".equals(drzw1)){out.print("selected");} %>>总审计师</option>
+														<option value="7" <%if("7".equals(drzw1)){out.print("selected");} %>>巡视员</option>
+														<option value="8" <%if("8".equals(drzw1)){out.print("selected");} %>>副巡视员</option>
+														<option value="9" <%if("9".equals(drzw1)){out.print("selected");} %>>处长</option>
+														<option value="10" <%if("10".equals(drzw1)){out.print("selected");} %>>主任</option>
+														<option value="11" <%if("11".equals(drzw1)){out.print("selected");} %>>副处长</option>
+														<option value="12" <%if("12".equals(drzw1)){out.print("selected");} %>>副主任</option>
+														<option value="13" <%if("13".equals(drzw1)){out.print("selected");} %>>调研员</option>
+														<option value="14" <%if("14".equals(drzw1)){out.print("selected");} %>>副调研员</option>
+														<option value="15" <%if("15".equals(drzw1)){out.print("selected");} %>>分局局长</option>
+														<option value="16" <%if("16".equals(drzw1)){out.print("selected");} %>>分局副局长</option>
+														<option value="17" <%if("17".equals(drzw1)){out.print("selected");} %>>科长</option>
+														<option value="18" <%if("18".equals(drzw1)){out.print("selected");} %>>副科长</option>
+														<option value="19" <%if("19".equals(drzw1)){out.print("selected");} %>>所长</option>
+														<option value="20" <%if("20".equals(drzw1)){out.print("selected");} %>>副所长</option>
+														<option value="21" <%if("21".equals(drzw1)){out.print("selected");} %>>主任科员</option>
+														<option value="22" <%if("22".equals(drzw1)){out.print("selected");} %>>副主任科员</option>
+														<option value="23" <%if("23".equals(drzw1)){out.print("selected");} %>>股长</option>
+														<option value="24" <%if("24".equals(drzw1)){out.print("selected");} %>>副股长</option>
+														<option value="25" <%if("25".equals(drzw1)){out.print("selected");} %>>科员</option>
+													</select>
+												</td>
+											</tr>
+											<%
+											}
+										%>
+										</table>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" rowspan="7" class="td_txt1">家庭<br>
+									成员<br>
+									情况<br></td>
+								<td align="center" height="23" class="td_txt">与本人关系</td>
+								<td align="center" colspan="2" class="td_txt">姓名</td>
+								<td align="center" colspan="2" class="td_txt">出生年月</td>
+								<td align="center" colspan="2" class="td_txt">政治面貌</td>
+								<td align="center" colspan="2" class="td_txt">工作单位及职务</td>
+							</tr>
+							<tr>
+								<td>
+									<select id="ybrgx1" name="ybrgx1" class="inputs" value="">
+										<option value="2" selected="selected">父亲</option>
+									</select>
+								</td>
+								<td colspan="2"><input id="xm1" name="xm1" maxlength="10" class="inputs" value=""></td>
+								<td colspan="2">
+									<input align="left" type="text" id="csny1" name="csny1" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+								<td colspan="2">
+									<select id="zzmm1" name="zzmm1" class="inputs" value="">
+										<option value="0"></option>
+										<option value="1">中共党员</option>
+										<option value="2">预备党员</option>
+										<option value="3">民主党派</option>
+										<option value="5">共青团员</option>
+										<option value="4">群众</option>
+									</select>
+								</td>
+								<td colspan="2"><input id="gzdwjzw1" name="gzdwjzw1" maxlength="25" class="inputs" value=""></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="ybrgx2" name="ybrgx2" class="inputs" value="">
+										<option value="3" selected="selected">母亲</option>
+									</select></td>
+								<td colspan="2"><input id="xm2" name="xm2" maxlength="10" class="inputs" value=""></td>
+								<td colspan="2">
+									<input align="left" type="text" id="csny2" name="csny2" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+								<td colspan="2">
+									<select id="zzmm2" name="zzmm2" class="inputs" value="">
+										<option value="0"></option>
+										<option value="1">中共党员</option>
+										<option value="2">预备党员</option>
+										<option value="3">民主党派</option>
+										<option value="5">共青团员</option>
+										<option value="4">群众</option>
+									</select>
+								</td>
+								<td colspan="2"><input id="gzdwjzw2" name="gzdwjzw2" maxlength="25" class="inputs" value=""></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="ybrgx3" name="ybrgx3" class="inputs" value="">
+										<option value=""></option>
+										<option value="1">配偶</option>
+										<option value="4">儿子</option>
+										<option value="5">女儿</option>
+									</select></td>
+								<td colspan="2"><input id="xm3" name="xm3" maxlength="10" class="inputs" value=""></td>
+								<td colspan="2">
+									<input align="left" type="text" id="csny3" name="csny3" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+								<td colspan="2">
+									<select id="zzmm3" name="zzmm3" class="inputs" value="">
+										<option value="0"></option>
+										<option value="1">中共党员</option>
+										<option value="2">预备党员</option>
+										<option value="3">民主党派</option>
+										<option value="5">共青团员</option>
+										<option value="4">群众</option>
+									</select>
+								</td>
+								<td colspan="2"><input id="gzdwjzw3" name="gzdwjzw3" maxlength="25" class="inputs" value=""></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="ybrgx4" name="ybrgx4" class="inputs" value="">
+										<option value=""></option>
+										<option value="1">配偶</option>
+										<option value="4">儿子</option>
+										<option value="5">女儿</option>
+									</select></td>
+								<td colspan="2"><input id="xm4" name="xm4" maxlength="10" class="inputs" value=""></td>
+								<td colspan="2">
+									<input align="left" type="text" id="csny4" name="csny4" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+								<td colspan="2">
+									<select id="zzmm4" name="zzmm4" class="inputs" value="">
+										<option value="0"></option>
+										<option value="1">中共党员</option>
+										<option value="2">预备党员</option>
+										<option value="3">民主党派</option>
+										<option value="5">共青团员</option>
+										<option value="4">群众</option>
+									</select>
+								</td>
+								<td colspan="2"><input id="gzdwjzw4" name="gzdwjzw4" maxlength="25" class="inputs" value=""></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="ybrgx5" name="ybrgx5" class="inputs" value="">
+										<option value=""></option>
+										<option value="1">配偶</option>
+										<option value="4">儿子</option>
+										<option value="5">女儿</option>
+									</select></td>
+								<td colspan="2"><input id="xm5" name="xm5" maxlength="10" class="inputs" value=""></td>
+								<td colspan="2">
+									<input align="left" type="text" id="csny5" name="csny5" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+								<td colspan="2">
+									<select id="zzmm5" name="zzmm5" class="inputs" value="">
+										<option value="0"></option>
+										<option value="1">中共党员</option>
+										<option value="2">预备党员</option>
+										<option value="3">民主党派</option>
+										<option value="5">共青团员</option>
+										<option value="4">群众</option>
+									</select>
+								</td>
+								<td colspan="2"><input id="gzdwjzw5" name="gzdwjzw5" maxlength="25" class="inputs" value=""></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="ybrgx6" name="ybrgx6" class="inputs" value="">
+										<option value=""></option>
+										<option value="1">配偶</option>
+										<option value="4">儿子</option>
+										<option value="5">女儿</option>
+									</select></td>
+								<td colspan="2"><input id="xm6" name="xm6" maxlength="10" class="inputs" value=""></td>
+								<td colspan="2">
+									<input align="left" type="text" id="csny6" name="csny6" readonly="readonly" class="ymddate inputs" value="" />
+								</td>
+								<td colspan="2">
+									<select id="zzmm6" name="zzmm6" class="inputs" value="">
+										<option value="0"></option>
+										<option value="1">中共党员</option>
+										<option value="2">预备党员</option>
+										<option value="3">民主党派</option>
+										<option value="5">共青团员</option>
+										<option value="4">群众</option>
+									</select>
+								</td>
+								<td colspan="2"><input id="gzdwjzw6" name="gzdwjzw6" maxlength="25" class="inputs" value=""></td>
+							</tr>
+							<tr>
+								<td align="center" class="td_txt" style="height: 100px;">奖惩<br>情况<br></td>
+								<td colspan="9">
+									<textarea id="jcqk" name="jcqk" rows="6" style="width: 99%"></textarea>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="10" class="input_val" align="right"><font color="red">*</font>填表日期：
+						<input align="left" type="text" id="tbrq" name="tbrq" class="ymddate" style="width: 100px;" value="" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="10" class="input_val" align="center">
+						<button type="button" onclick="f_savedata()" class="layui-btn">信息确认并导出excel</button>
+					</td>
+				</tr>
+				<tr>
+					<td height="36" colspan="10" align="center" style='font-size:12.0pt;color:red;padding-top: 30px;padding-bottom: 30px;'>&nbsp;&nbsp;正确填报以后，点击【信息确认并导出excel】
+						导出excel文件（文件名不用修改），发送给管理员即可&nbsp;&nbsp;</td>
+				</tr>
+				<tr>
+					<td height="36" colspan="10" align="center" onclick="f_showyb()" title="点击查看/折叠 样例表" style='font-size:15.0pt;color:blue;padding-top: 100px;padding-bottom: 50px;font-weight: bold;cursor: pointer;'>vv 查看样例表 vv</td>
+				</tr>
+				<tr id="ybdiv" style="display: none;">
+					<td colspan="10" class="input_val" align="center">
+						<p class="indentPic"><img src="dist/img/grjbxx_2.png" /></p>
+						<table border="1" class="tablestyle" width="800px" border="0" cellpadding="0" cellspacing="0">
+							<tr class="trth">
+								<td style="width: 10%;">行序号</td>
+								<td style="width: 30%;">录入项</td>
+								<td style="width: 10%;">是否必填</td>
+								<td style="width: 50%;">说明 </td>
+							</tr>
+							<tr>
+								<td rowspan="4">1</td>
+								<td>姓名</td>
+								<td>是</td>
+								<td>登录用户的真实姓名</td>
+							</tr>
+							<tr>
+								<td>性别</td>
+								<td>是</td>
+								<td>下拉</td>
+							</tr>
+							<tr>
+								<td>出生年月</td>
+								<td>是</td>
+								<td>用户出生的年份月份</td>
+							</tr>
+							<tr>
+								<td>照片区域</td>
+								<td>&nbsp;</td>
+								<td>点击上传个人图片</td>
+							</tr>
+							<tr>
+								<td rowspan="3">2</td>
+								<td>曾用名</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>民族</td>
+								<td>是</td>
+								<td>下拉</td>
+							</tr>
+							<tr>
+								<td>身份证号</td>
+								<td>是</td>
+								<td>身份证号</td>
+							</tr>
+							<tr>
+								<td rowspan="3">3</td>
+								<td>籍贯</td>
+								<td>是</td>
+								<td>祖居地或原籍</td>
+							</tr>
+							<tr>
+								<td>婚姻状况</td>
+								<td>是</td>
+								<td>下拉</td>
+							</tr>
+							<tr>
+								<td>文化程度</td>
+								<td>是</td>
+								<td>下拉</td>
+							</tr>
+							<tr>
+								<td rowspan="3">4</td>
+								<td>政治面貌</td>
+								<td>是</td>
+								<td>下拉</td>
+							</tr>
+							<tr>
+								<td>入党时间</td>
+								<td>&nbsp;</td>
+								<td>选择</td>
+							</tr>
+							<tr>
+								<td>参加工作时间</td>
+								<td>是</td>
+								<td>选择</td>
+							</tr>
+							<tr>
+								<td rowspan="2">5</td>
+								<td>单位</td>
+								<td>&nbsp;</td>
+								<td>现在工作单位</td>
+							</tr>
+							<tr>
+								<td>单位性质</td>
+								<td>&nbsp;</td>
+								<td>下拉</td>
+							</tr>
+							<tr>
+								<td rowspan="3">6</td>
+								<td>职务</td>
+								<td>是</td>
+								<td>现在的职务</td>
+							</tr>
+							<tr>
+								<td>级别</td>
+								<td>是</td>
+								<td>下拉</td>
+							</tr>
+							<tr>
+								<td>法律职务</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td rowspan="2">7</td>
+								<td>分管（从事）工作</td>
+								<td>是</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>任现职时间</td>
+								<td>是</td>
+								<td>选择</td>
+							</tr>
+							<tr>
+								<td rowspan="2">8</td>
+								<td>住址</td>
+								<td>是</td>
+								<td>现居住地址</td>
+							</tr>
+							<tr>
+								<td>邮编</td>
+								<td>&nbsp;</td>
+								<td>邮政编码</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>主要任职情况</td>
+								<td>&nbsp;</td>
+								<td>本人什么时间在什么单位担任什么职务</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>家庭成员情况</td>
+								<td>&nbsp;</td>
+								<td>所有家属的出生年月政治面貌以及工作单位和职务</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>奖惩情况</td>
+								<td>&nbsp;</td>
+								<td>个人工作中奖惩情况</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>填表时间</td>
+								<td>&nbsp;</td>
+								<td>系统默认</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<div class="table-responsive" style="width: 0px;height: 0px;overflow: hidden;">
+				<table id="exptable" fileName="exptable" class="table table-striped table-bordered" data-name="cool-table">
+					<thead>
+						<!-- 
+		<tr>
+		    <th>姓名</th>
+		    <th>性别</th>
+		    <th>身份证号</th>
+		    <th>曾用名</th>
+		    <th>民族</th>
+		    <th>出生年月</th>
+		    <th>主要任职情况</th>
+		</tr>
+		</thead> -->
+					<tbody>
+						<tr>
+							<td id="_bmid"></td>
+							<td id="_grzwid"></td>
+							<td id="_xm"></td>
+							<td id="_xb"></td>
+							<td id="_sfzh"></td>
+							<td id="_cym"></td>
+							<td id="_mz"></td>
+							<td id="_csny"></td>
+							<td id="_jg"></td>
+							<td id="_hyzk"></td>
+							<td id="_whcd"></td>
+							<td id="_zzmm"></td>
+							<td id="_rdsj"></td>
+							<td id="_cjgzsj"></td>
+							<td id="_dwxz"></td>
+							<td id="_grjb"></td>
+							<td id="_grzc"></td>
+							<td id="_fggz"></td>
+							<td id="_rxzsj"></td>
+							<td id="_jtzz"></td>
+							<td id="_yb"></td>
+							<td id="_gddh"></td>
+							<td id="_sj"></td>
+							<td id="_zyrzqk"></td>
+							<td id="_ybrgx1"></td>
+							<td id="_xm1"></td>
+							<td id="_csny1"></td>
+							<td id="_zzmm1"></td>
+							<td id="_gzdwjzw1"></td>
+							<td id="_ybrgx2"></td>
+							<td id="_xm2"></td>
+							<td id="_csny2"></td>
+							<td id="_zzmm2"></td>
+							<td id="_gzdwjzw2"></td>
+							<td id="_ybrgx3"></td>
+							<td id="_xm3"></td>
+							<td id="_csny3"></td>
+							<td id="_zzmm3"></td>
+							<td id="_gzdwjzw3"></td>
+							<td id="_ybrgx4"></td>
+							<td id="_xm4"></td>
+							<td id="_csny4"></td>
+							<td id="_zzmm4"></td>
+							<td id="_gzdwjzw4"></td>
+							<td id="_ybrgx5"></td>
+							<td id="_xm5"></td>
+							<td id="_csny5"></td>
+							<td id="_zzmm5"></td>
+							<td id="_gzdwjzw5"></td>
+							<td id="_ybrgx6"></td>
+							<td id="_xm6"></td>
+							<td id="_csny6"></td>
+							<td id="_zzmm6"></td>
+							<td id="_gzdwjzw6"></td>
+							<td id="_jcqk"></td>
+							<td id="_tbrq"></td>
+							<td id="_grzwtext"></td>
+							<td id="_zp"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="bbb" name="bbb"></div>
+		</center>
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="js/xlsx.core.min.js"></script>
+		<script src="js/blob.js"></script>
+		<script src="js/FileSaver.min.js"></script>
+		<script src="dist/js/tableexport.js"></script>
+		<script src="js/check.js" charset="GBK"></script>
+		<script src="js/mm.js" charset="GBK"></script>
+
+		<script src="layui/layui.all.js"></script>
+		<script type="text/javascript">
+			var select2, select3, select4;
+		    var base = new Base64(); 
+			function init() {
+				$(".td_txt1").each(function(i) {
+					$(this).html("" + $(this).html() + "<font color='red'>*</font>");
+				});
+				//AutoResizeImage(100,120,document.getElementById("zpimg"));
+				//f_btnalive();
+				select2 = $("#quiz2").clone();
+				select3 = $("#quiz3").clone();
+				select4 = $("#quiz4").clone();
+				
+				var nowymd = getNowFormatDate();
+				if($("#tbrq").val()==''){
+					$("#tbrq").val(nowymd);
+				}
+			}
+
+			$(function() {
+				layui.use('laydate', function() {
+					var laydate = layui.laydate;
+					laydate.render({
+						elem: '#csny', //指定元素
+						type: 'month'
+					});
+
+					$(".ymddate").each(function() {
+						laydate.render({
+							elem: this //指定元素  表示当前的元素
+						});
+					});
+				});
+
+				// $("#zp").change(function() {
+				// 	alert($("#zp").val());
+				// 	$("#zpimg").attr("src", "file:///" + $("#zp").val());
+				// });
+
+				var image = '';
+				$('#zp').change(function() {
+
+					var filename = document.getElementById('zp').value;
+					if (filename.length < 1) {
+						alert("附件路径不能为空");
+						return;
+					}
+					//必须是jpg 或 pdf
+					var ll = filename.lastIndexOf(".");
+					var flnamStr = filename.substr(ll + 1);
+					if (filename.indexOf('.') > 0) {
+						if (flnamStr == 'png' || flnamStr == 'PNG' || flnamStr == 'jpg' || flnamStr == 'JPG' || flnamStr == 'jpeg' ||
+							flnamStr == 'JPEG') {
+							//document.forms[0].submit();
+						} else {
+							alert('必须是png 或 jpg格式的图像文件,请确认!');
+							return;
+						}
+					}
+
+					var oFReader = new FileReader();
+					var file = document.getElementById('zp').files[0];
+					oFReader.readAsDataURL(file);
+					oFReader.onloadend = function(oFRevent) {
+						var image = new Image();
+						image = oFRevent.target.result;
+						$('#zpimg').attr('src', image);
+						image.onload = function() {
+							alert("图片的宽度为" + image.width + ",长度为" + image.height);
+						};
+					}
+				})
+			});
+
+			function f_savedata() {
+				//首先验证数据
+				var bmid = $("#bmid").val();
+				if (bmid == '') {
+					layer.alert("处/科室不能为空", function(index) {
+						layer.close(index);
+					});
+					return false;
+				}
+
+				var grzwid = '';
+				var grzwtext = '';
+				$.each($('input:checkbox:checked'), function() {
+					grzwid += (',' + $(this).val());
+					grzwtext += (',' + $.trim($(this).parent().text()));
+				});
+				//alert(grzwid+'---'+grzwtext);
+				if (grzwid == '') {
+					layer.alert("个人职务不能为空", function(index) {
+						layer.close(index);
+					});
+					return false;
+				}
+
+				var xm = $.trim($("#xm").val());
+				if (xm == '') {
+					layer.alert("姓名不能为空", function(index) {
+						layer.close(index);
+					});
+					return false;
+				} else {
+					if (!AntiSqlValid_str(xm)) {
+						layer.alert("姓名 内容不规范", function(index) {
+							layer.close(index);
+							$("#xm").focus();
+						});
+						return false;
+					}
+				}
+
+				var xb = $("#xb").val();
+
+				var sfzh = $("#sfzh").val();
+				if (sfzh == '') {
+					layer.alert("身份证号不能为空", function(index) {
+						$("#sfzh").focus();
+						layer.close(index);
+					});
+					return false;
+				} else {
+					if (!f_check_IDno(document.getElementById("sfzh"))) {
+						return;
+					}
+				}
+
+				var cym = $("#cym").val();
+				if ($("#cym").val() != '') {
+					if (!f_check_ZhOrNumOrLett(document.getElementById("cym"))) {
+						return;
+					}
+				}
+
+				var mz = $("#mz").val();
+				var csny = $("#csny").val();
+				if (csny == '') {
+					layer.alert("出生年月不能为空", function(index) {
+						layer.close(index);
+					});
+					return false;
+				}
+
+				var jg = $("#jg").val();
+				if (jg == '') {
+					layer.alert("籍贯不能为空", function(index) {
+						$("#jg").focus();
+						layer.close(index);
+					});
+					return false;
+				} else {
+					if (!f_check_zh(document.getElementById("jg"), '籍贯')) {
+						return;
+					}
+				}
+
+				var hyzk = $("#hyzk").val();
+				var whcd = $("#whcd").val();
+				if (whcd == '0') {
+					layer.alert("文化程度不能为空", function(index) {
+						layer.close(index);
+					});
+					return false;
+				}
+				var zzmm = $("#zzmm").val();
+				var rdsj = $("#rdsj").val();
+				if (zzmm == '01') {
+					if ($("#rdsj").val() == '') {
+						layer.alert("入党时间不能为空", function(index) {
+							layer.close(index);
+						});
+						return false;
+					}
+				}
+
+				var cjgzsj = $("#cjgzsj").val();
+				if ($("#cjgzsj").val() == '') {
+					layer.alert("参加工作时间不能为空", function(index) {
+						layer.close(index);
+					});
+					return false;
+				}
+				var dwxz = $("#dwxz").val();
+
+				var grjb = $("#jb").val();
+				if (grjb == '') {
+					layer.alert("个人级别不能为空", function(index) {
+						layer.close(index);
+						$("#jb").focus();
+					});
+					return false;
+				}
+				var grzc = $("#zc").val();
+				if (grzc != '') {
+					if (!AntiSqlValid_str(grzc)) {
+						layer.alert("个人职称 内容不规范", function(index) {
+							layer.close(index);
+							$("#zc").focus();
+						});
+						return false;
+					}
+				}
+
+
+				var fggz = $("#fggz").val();
+				if (fggz == '') {
+					layer.alert("分管工作不能为空", function(index) {
+						$("#fggz").focus();
+						layer.close(index);
+					});
+					return false;
+				} else {
+					if (!AntiSqlValid_str(fggz)) {
+						layer.alert("分管工作 内容不规范", function(index) {
+							layer.close(index);
+							$("#fggz").focus();
+						});
+						return false;
+					}
+				}
+
+				var rxzsj = $("#rxzsj").val();
+				if (rxzsj == '') {
+					layer.alert("任现职时间不能为空", function(index) {
+						layer.close(index);
+					});
+					return false;
+				}
+
+				var jtzz = $("#zz").val();
+				if (jtzz == '') {
+					layer.alert("家庭住址不能为空", function(index) {
+						$("#zz").focus();
+						layer.close(index);
+					});
+					return false;
+				} else {
+					if (!AntiSqlValid_str(jtzz)) {
+						layer.alert("家庭住址 内容不规范", function(index) {
+							layer.close(index);
+							$("#zz").focus();
+						});
+						return false;
+					}
+				}
+
+				var yb = $("#yb").val();
+				if (yb != '') {
+					if (!f_check_zipcode(document.getElementById("yb"))) {
+						return;
+					}
+				}
+
+				var gddh = $("#gddh").val();
+				if ($("#gddh").val() == '') {
+					layer.alert("固定电话不能为空", function(index) {
+						$("#gddh").focus();
+						layer.close(index);
+					});
+					return false;
+				} else {
+					if (!isNum(document.getElementById("gddh"), '固定电话')) {
+						return false;
+					}
+				}
+
+				var sj = $("#sj").val();
+				if ($("#sj").val() == '') {
+					layer.alert("手机不能为空", function(index) {
+						$("#sj").focus();
+						layer.close(index);
+					});
+					return false;
+				} else {
+					if (!f_check_number(document.getElementById("sj"), '手机')) {
+						return;
+					} else {
+						if (strlen($("#sj").val()) != 11) {
+							layer.alert('手机号码长度必须是11位！');
+							$("#sj").focus();
+							return;
+						}
+					}
+				}
+
+				var zyrzqk = $("#zyrzqk").val();
+				if ($("#zyrzqk").val() == '') {
+					layer.alert("主要任职情况不能为空", function(index) {
+						$("#zyrzqk").focus();
+						layer.close(index);
+					});
+					return false;
+				}
+
+				var ybrgx1 = $.trim($("#ybrgx1").val());
+				var xm1 = $.trim($("#xm1").val());
+				var csny1 = $.trim($("#csny1").val());
+				var zzmm1 = $.trim($("#zzmm1").val());
+				var gzdwjzw1 = $.trim($("#gzdwjzw1").val());
+				if (xm1 == '' || csny1 == '' || zzmm1 == '' || gzdwjzw1 == '' || zzmm1 == '0') {
+					layer.alert("家庭成员关系中 父亲信息不完整", function(index) {
+						$("#xm1").focus();
+						layer.close(index);
+					});
+					return false;
+				}
+				if (xm1 != '') {
+					if (!AntiSqlValid_str(xm1)) {
+						layer.alert("家庭成员关系中 父亲姓名 内容不规范", function(index) {
+							layer.close(index);
+							$("#xm1").focus();
+						});
+						return false;
+					}
+				}
+				if (gzdwjzw1 != '') {
+					if (!AntiSqlValid_str(gzdwjzw1)) {
+						layer.alert("家庭成员关系中 父亲工作单位及职务 内容不规范", function(index) {
+							layer.close(index);
+							$("#gzdwjzw1").focus();
+						});
+						return false;
+					}
+				}
+
+
+				var ybrgx2 = $.trim($("#ybrgx2").val());
+				var xm2 = $.trim($("#xm2").val());
+				var csny2 = $.trim($("#csny2").val());
+				var zzmm2 = $.trim($("#zzmm2").val());
+				var gzdwjzw2 = $.trim($("#gzdwjzw2").val());
+				if (xm2 == '' || csny2 == '' || zzmm2 == '' || gzdwjzw2 == '' || zzmm2 == '0') {
+					layer.alert("家庭成员关系中 母亲信息不完整", function(index) {
+						$("#xm2").focus();
+						layer.close(index);
+					});
+					return false;
+				}
+				if (xm2 != '') {
+					if (!AntiSqlValid_str(xm2)) {
+						layer.alert("家庭成员关系中 母亲姓名 内容不规范", function(index) {
+							layer.close(index);
+							$("#xm2").focus();
+						});
+						return false;
+					}
+				}
+				if (gzdwjzw2 != '') {
+					if (!AntiSqlValid_str(gzdwjzw2)) {
+						layer.alert("家庭成员关系中 母亲工作单位及职务 内容不规范", function(index) {
+							layer.close(index);
+							$("#gzdwjzw2").focus();
+						});
+						return false;
+					}
+				}
+
+				var hyzk = $("#hyzk").val();
+				var ybrgx3 = $("#ybrgx3").val();
+				var xm3 = $.trim($("#xm3").val());
+				var csny3 = $.trim($("#csny3").val());
+				var zzmm3 = $.trim($("#zzmm3").val());
+				var gzdwjzw3 = $.trim($("#gzdwjzw3").val());
+				var ybrgx4 = $("#ybrgx4").val();
+				var xm4 = $.trim($("#xm4").val());
+				var csny4 = $.trim($("#csny4").val());
+				var zzmm4 = $.trim($("#zzmm4").val());
+				var gzdwjzw4 = $.trim($("#gzdwjzw4").val());
+				var ybrgx5 = $("#ybrgx5").val();
+				var xm5 = $.trim($("#xm5").val());
+				var csny5 = $.trim($("#csny5").val());
+				var zzmm5 = $.trim($("#zzmm5").val());
+				var gzdwjzw5 = $.trim($("#gzdwjzw5").val());
+				var ybrgx6 = $("#ybrgx6").val();
+				var xm6 = $.trim($("#xm6").val());
+				var csny6 = $.trim($("#csny6").val());
+				var zzmm6 = $.trim($("#zzmm6").val());
+				var gzdwjzw6 = $.trim($("#gzdwjzw6").val());
+				if (hyzk == 'yh') {
+					if (ybrgx3 != '1' && ybrgx4 != '1' && ybrgx5 != '1' && ybrgx6 != '1') {
+						layer.alert("家庭成员关系中 配偶信息未填报");
+						return false;
+					} else {
+						if (ybrgx3 == '1') {
+							if (xm3 == '' || csny3 == '' || zzmm3 == '' || gzdwjzw3 == '' || zzmm3 == '0') {
+								layer.alert("家庭成员关系中 配偶信息不完整");
+								return false;
+							}
+						}
+
+						if (ybrgx4 == '1') {
+							if (xm4 == '' || csny4 == '' || zzmm4 == '' || gzdwjzw4 == '' || zzmm4 == '0') {
+								layer.alert("家庭成员关系中 配偶信息不完整");
+								return false;
+							}
+						}
+						if (ybrgx5 == '1') {
+							if (xm5 == '' || csny5 == '' || zzmm5 == '' || gzdwjzw5 == '' || zzmm5 == '0') {
+								layer.alert("家庭成员关系中 配偶信息不完整");
+								return false;
+							}
+						}
+						if (ybrgx6 == '1') {
+							if (xm6 == '' || csny6 == '' || zzmm6 == '' || gzdwjzw6 == '' || zzmm6 == '0') {
+								layer.alert("家庭成员关系中 配偶信息不完整");
+								return false;
+							}
+						}
+					}
+				}
+
+
+				if (xm3 != '') {
+					if (!AntiSqlValid_str(xm3)) {
+						layer.alert("家庭成员关系中 姓名 内容不规范", function(index) {
+							layer.close(index);
+							$("#xm3").focus();
+						});
+						return false;
+					}
+				}
+				if (gzdwjzw3 != '') {
+					if (!AntiSqlValid_str(gzdwjzw3)) {
+						layer.alert("家庭成员关系中 工作单位及职务 内容不规范", function(index) {
+							layer.close(index);
+							$("#gzdwjzw3").focus();
+						});
+						return false;
+					}
+				}
+				if (xm4 != '') {
+					if (!AntiSqlValid_str(xm4)) {
+						layer.alert("家庭成员关系中 姓名 内容不规范", function(index) {
+							layer.close(index);
+							$("#xm4").focus();
+						});
+						return false;
+					}
+				}
+				if (gzdwjzw4 != '') {
+					if (!AntiSqlValid_str(gzdwjzw4)) {
+						layer.alert("家庭成员关系中 工作单位及职务 内容不规范", function(index) {
+							layer.close(index);
+							$("#gzdwjzw4").focus();
+						});
+						return false;
+					}
+				}
+				if (xm5 != '') {
+					if (!AntiSqlValid_str(xm5)) {
+						layer.alert("家庭成员关系中 姓名 内容不规范", function(index) {
+							layer.close(index);
+							$("#xm5").focus();
+						});
+						return false;
+					}
+				}
+				if (gzdwjzw5 != '') {
+					if (!AntiSqlValid_str(gzdwjzw5)) {
+						layer.alert("家庭成员关系中 工作单位及职务 内容不规范", function(index) {
+							layer.close(index);
+							$("#gzdwjzw5").focus();
+						});
+						return false;
+					}
+				}
+				if (xm6 != '') {
+					if (!AntiSqlValid_str(xm6)) {
+						layer.alert("家庭成员关系中 姓名 内容不规范", function(index) {
+							layer.close(index);
+							$("#xm6").focus();
+						});
+						return false;
+					}
+				}
+				if (gzdwjzw6 != '') {
+					if (!AntiSqlValid_str(gzdwjzw6)) {
+						layer.alert("家庭成员关系中 工作单位及职务 内容不规范", function(index) {
+							layer.close(index);
+							$("#gzdwjzw6").focus();
+						});
+						return false;
+					}
+				}
+
+				var jcqk = $("#jcqk").val();
+				if (jcqk != '') {
+					if (!AntiSqlValid_str(jcqk)) {
+						layer.alert("奖惩情况 内容不规范", function(index) {
+							layer.close(index);
+							$("#jcqk").focus();
+						});
+						return false;
+					}
+				}
+				var tbrq = $("#tbrq").val();
+				if ($("#tbrq").val() == '') {
+					layer.alert("填表日期不能为空", function(index) {
+						$("#tbrq").focus();
+						layer.close(index);
+					});
+					return false;
+				}
+				var filecon = '';
+
+				var file = document.querySelector('#zp').files[0];
+				if (file == undefined) {
+					if (confirm('确认数据填报完整并导出excel？')) {
+						$("#expbtn").remove();
+						$("#_bmid").html(base.encode(bmid));
+						$("#_grzwid").html(base.encode(grzwid));
+						$("#_xm").html(base.encode(xm));
+						$("#_xb").html(base.encode(xb));
+						$("#_sfzh").html(base.encode(sfzh));
+						$("#_cym").html(base.encode(cym));
+						$("#_mz").html(base.encode(mz));
+						$("#_csny").html(base.encode(csny));
+						$("#_jg").html(base.encode(jg));
+						$("#_hyzk").html(base.encode(hyzk));
+						$("#_whcd").html(base.encode(whcd));
+						$("#_zzmm").html(base.encode(zzmm));
+						$("#_rdsj").html(base.encode(rdsj));
+						$("#_cjgzsj").html(base.encode(cjgzsj));
+						$("#_dwxz").html(base.encode(dwxz));
+						$("#_grjb").html(base.encode(grjb));
+						$("#_grzc").html(base.encode(grzc));
+						$("#_fggz").html(base.encode(fggz));
+						$("#_rxzsj").html(base.encode(rxzsj));
+						$("#_jtzz").html(base.encode(jtzz));
+						$("#_yb").html(base.encode(yb));
+						$("#_gddh").html(base.encode(gddh));
+						$("#_sj").html(base.encode(sj));
+						$("#_zyrzqk").html(base.encode(zyrzqk));
+						$("#_ybrgx1").html(base.encode(ybrgx1));
+						$("#_xm1").html(base.encode(xm1));
+						$("#_csny1").html(base.encode(csny1));
+						$("#_zzmm1").html(base.encode(zzmm1));
+						$("#_gzdwjzw1").html(base.encode(gzdwjzw1));
+						$("#_ybrgx2").html(base.encode(ybrgx2));
+						$("#_xm2").html(base.encode(xm2));
+						$("#_csny2").html(base.encode(csny2));
+						$("#_zzmm2").html(base.encode(zzmm2));
+						$("#_gzdwjzw2").html(base.encode(gzdwjzw2));
+						$("#_ybrgx3").html(base.encode(ybrgx3));
+						$("#_xm3").html(base.encode(xm3));
+						$("#_csny3").html(base.encode(csny3));
+						$("#_zzmm3").html(base.encode(zzmm3));
+						$("#_gzdwjzw3").html(base.encode(gzdwjzw3));
+						$("#_ybrgx4").html(base.encode(ybrgx4));
+						$("#_xm4").html(base.encode(xm4));
+						$("#_csny4").html(base.encode(csny4));
+						$("#_zzmm4").html(base.encode(zzmm4));
+						$("#_gzdwjzw4").html(base.encode(gzdwjzw4));
+						$("#_ybrgx5").html(base.encode(ybrgx5));
+						$("#_xm5").html(base.encode(xm5));
+						$("#_csny5").html(base.encode(csny5));
+						$("#_zzmm5").html(base.encode(zzmm5));
+						$("#_gzdwjzw5").html(base.encode(gzdwjzw5));
+						$("#_ybrgx6").html(base.encode(ybrgx6));
+						$("#_xm6").html(base.encode(xm6));
+						$("#_csny6").html(base.encode(csny6));
+						$("#_zzmm6").html(base.encode(zzmm6));
+						$("#_gzdwjzw6").html(base.encode(gzdwjzw6));
+						$("#_jcqk").html(base.encode(jcqk));
+						$("#_tbrq").html(base.encode(tbrq));
+						$("#_zp").html(filecon);
+						$("#_grzwtext").html(base.encode(grzwtext));
+						$("#exptable").attr('fileName', bmid + '_' + xm);
+						$("#exptable").tableExport({
+							formats: ["xlsx"]
+						});
+					}
+				} else {
+					var reader = new FileReader();
+					var sss = reader.readAsDataURL(file);
+					reader.onload = function() {
+						filecon = this.result;
+						if (confirm('确认数据填报完整并导出excel？')) {
+							$("#expbtn").remove();
+							$("#_bmid").html(base.encode(bmid));
+							$("#_grzwid").html(base.encode(grzwid));
+							$("#_xm").html(base.encode(xm));
+							$("#_xb").html(base.encode(xb));
+							$("#_sfzh").html(base.encode(sfzh));
+							$("#_cym").html(base.encode(cym));
+							$("#_mz").html(base.encode(mz));
+							$("#_csny").html(base.encode(csny));
+							$("#_jg").html(base.encode(jg));
+							$("#_hyzk").html(base.encode(hyzk));
+							$("#_whcd").html(base.encode(whcd));
+							$("#_zzmm").html(base.encode(zzmm));
+							$("#_rdsj").html(base.encode(rdsj));
+							$("#_cjgzsj").html(base.encode(cjgzsj));
+							$("#_dwxz").html(base.encode(dwxz));
+							$("#_grjb").html(base.encode(grjb));
+							$("#_grzc").html(base.encode(grzc));
+							$("#_fggz").html(base.encode(fggz));
+							$("#_rxzsj").html(base.encode(rxzsj));
+							$("#_jtzz").html(base.encode(jtzz));
+							$("#_yb").html(base.encode(yb));
+							$("#_gddh").html(base.encode(gddh));
+							$("#_sj").html(base.encode(sj));
+							$("#_zyrzqk").html(base.encode(zyrzqk));
+							$("#_ybrgx1").html(base.encode(ybrgx1));
+							$("#_xm1").html(base.encode(xm1));
+							$("#_csny1").html(base.encode(csny1));
+							$("#_zzmm1").html(base.encode(zzmm1));
+							$("#_gzdwjzw1").html(base.encode(gzdwjzw1));
+							$("#_ybrgx2").html(base.encode(ybrgx2));
+							$("#_xm2").html(base.encode(xm2));
+							$("#_csny2").html(base.encode(csny2));
+							$("#_zzmm2").html(base.encode(zzmm2));
+							$("#_gzdwjzw2").html(base.encode(gzdwjzw2));
+							$("#_ybrgx3").html(base.encode(ybrgx3));
+							$("#_xm3").html(base.encode(xm3));
+							$("#_csny3").html(base.encode(csny3));
+							$("#_zzmm3").html(base.encode(zzmm3));
+							$("#_gzdwjzw3").html(base.encode(gzdwjzw3));
+							$("#_ybrgx4").html(base.encode(ybrgx4));
+							$("#_xm4").html(base.encode(xm4));
+							$("#_csny4").html(base.encode(csny4));
+							$("#_zzmm4").html(base.encode(zzmm4));
+							$("#_gzdwjzw4").html(base.encode(gzdwjzw4));
+							$("#_ybrgx5").html(base.encode(ybrgx5));
+							$("#_xm5").html(base.encode(xm5));
+							$("#_csny5").html(base.encode(csny5));
+							$("#_zzmm5").html(base.encode(zzmm5));
+							$("#_gzdwjzw5").html(base.encode(gzdwjzw5));
+							$("#_ybrgx6").html(base.encode(ybrgx6));
+							$("#_xm6").html(base.encode(xm6));
+							$("#_csny6").html(base.encode(csny6));
+							$("#_zzmm6").html(base.encode(zzmm6));
+							$("#_gzdwjzw6").html(base.encode(gzdwjzw6));
+							$("#_jcqk").html(base.encode(jcqk));
+							$("#_tbrq").html(base.encode(tbrq));
+							//$("#bbb").html(base.encode(filecon));
+							$("#_grzwtext").html(base.encode(grzwtext));
+							$("#_zp").html(filecon);
+							$("#exptable").attr('fileName', bmid + '_' + xm);
+							$("#exptable").tableExport({
+								formats: ["xlsx"]
+							});
+						}
+					}
+				}
+			}
+
+			var selectBmid = '';
+
+			function f_select(type) {
+				if (type == 1) {
+
+					var selid = $("#quiz1").val();
+					$("#quiz2").find('option').remove();
+					var options2 = select2.find("option[parentid='" + selid + "']").clone();
+					$("#quiz2").append(select2.find('option').eq(0).clone());
+					$("#quiz2").append(options2);
+
+					//$("#quiz2").find('option').eq(0).attr("selected",true);
+
+
+					// $("#quiz2 option").hide();
+					// $("#quiz2span").prepend($("#quiz2 option"));
+					// alert(111);
+					// alert($("#quiz2span option").length);
+					// $("#quiz2").append($("#quiz2 option").eq(0));
+					// // .show();
+					// $("#quiz2span option").each(function(i){
+					// 	var parentid = $(this).attr("parentid");
+					// 	if(selid == parentid){
+					// 		$("#quiz2").append($(this));
+					// 	}
+					// });
+					// $("#quiz2").val('');
+					// $("#quiz3").val('');
+					// $("#quiz4").val('');
+					if (selid == '') {
+						$("#quiz2").hide();
+						$("#bmid").val('');
+						selectBmid = '';
+					} else {
+						$("#quiz2").show();
+					}
+
+					// $("#quiz3 option").hide();
+					// $("#quiz4 option").hide();
+					$("#quiz3").hide();
+					$("#quiz4").hide();
+					$("#bmid").val('');
+
+				} else if (type == 2) {
+					var selid = $("#quiz2").val();
+					var deptflag = $("#quiz2").find("option:selected").attr("deptflag");
+
+					if (deptflag == 'B') { //如果是部门
+						selectBmid = selid;
+						$("#bmid").val(selectBmid);
+						$("#quiz3").hide();
+						$("#quiz4").hide();
+					} else {
+						$("#bmid").val('');
+						selectBmid = '';
+						// $("#quiz3").val('');
+						// $("#quiz4").val('');
+						$("#quiz3").show();
+						// $("#quiz3 option").hide();
+						// $("#quiz3 option").eq(0).show();
+						// $("#quiz3 option").each(function(i){
+						// 	var parentid = $(this).attr("parentid");
+						// 	if(selid == parentid){
+						// 		$(this).show();
+						// 	}
+						// });
+						// $("#quiz4 option").hide();
+
+						$("#quiz3").find('option').remove();
+						var options3 = select3.find("option[parentid='" + selid + "']").clone();
+						if (options3.length == 0) {
+							selectBmid = selid;
+							$("#bmid").val(selectBmid);
+							$("#quiz3").hide();
+						} else {
+							$("#quiz3").append(select3.find('option').eq(0).clone());
+							$("#quiz3").append(options3);
+						}
+						$("#quiz4").hide();
+					}
+				} else if (type == 3) {
+					var selid = $("#quiz3").val();
+					var deptflag = $("#quiz3").find("option:selected").attr("deptflag");
+
+					if (deptflag == 'B') { //如果是部门
+						selectBmid = selid;
+						$("#bmid").val(selectBmid);
+						$("#quiz4").hide();
+					} else {
+						$("#bmid").val('');
+						selectBmid = '';
+						// $("#quiz4").val('');
+						$("#quiz4").show();
+						// $("#quiz4 option").hide();
+						// $("#quiz4 option").eq(0).show();
+						// $("#quiz4 option").each(function(i){
+						// 	var parentid = $(this).attr("parentid");
+						// 	if(selid == parentid){
+						// 		$(this).show();
+						// 	}
+						// });
+						$("#quiz4").find('option').remove();
+						var options4 = select4.find("option[parentid='" + selid + "']").clone();
+						if (options4.length == 0) {
+							selectBmid = selid;
+							$("#bmid").val(selectBmid);
+							$("#quiz4").hide();
+						} else {
+							$("#quiz4").append(select4.find('option').eq(0).clone());
+							$("#quiz4").append(options4);
+						}
+
+					}
+				} else if (type == 4) {
+					var selid = $("#quiz4").val();
+					var deptflag = $("#quiz4").find("option:selected").attr("deptflag");
+
+					if (deptflag == 'B') { //如果是部门
+						selectBmid = selid;
+						$("#bmid").val(selectBmid);
+					} else {
+						$("#bmid").val('');
+						selectBmid = '';
+					}
+				}
+			}
+
+			function f_showyb() {
+				$("#ybdiv").toggle('2000');
+
+			}
+			
+			function getNowFormatDate() {
+				var date = new Date();
+				var seperator1 = "-";
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if (month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if (strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var currentdate = year + seperator1 + month + seperator1 + strDate;
+				return currentdate;
+			}
+		</script>
+	</body>
+</html>
